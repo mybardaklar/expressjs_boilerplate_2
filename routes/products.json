@@ -1,0 +1,30 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/products",
+      "handler": "ProductController.find",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/products/:id",
+      "handler": "ProductController.findOne"
+    },
+    {
+      "method": "POST",
+      "path": "/products",
+      "handler": "ProductController.create"
+    },
+    {
+      "method": "PUT",
+      "path": "/products/:id",
+      "handler": "ProductController.update"
+    },
+    {
+      "method": "DELETE",
+      "path": "/products/:id",
+      "handler": "ProductController.delete"
+    }
+  ]
+}
