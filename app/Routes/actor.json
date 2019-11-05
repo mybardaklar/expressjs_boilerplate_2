@@ -1,0 +1,17 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/actors",
+      "handler": "actor.find"
+    },
+    {
+      "method": "POST",
+      "path": "/actor",
+      "handler": "actor.create",
+      "authenticated": true,
+      "permission": "moderator",
+      "middleware": ["FileUpload.singleImage"]
+    }
+  ]
+}

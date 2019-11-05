@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/users",
+      "handler": "dashboard/user.index",
+      "authenticated": false
+    },
+    {
+      "method": "GET",
+      "path": "/users/user",
+      "handler": "dashboard/user.user",
+      "authenticated": true
+    },
+    {
+      "method": "POST",
+      "path": "/users/user",
+      "handler": "dashboard/user.user_create",
+      "authenticated": true,
+      "middleware": ["FileUpload.singleImage"],
+      "permission": "moderator"
+    },
+    {
+      "method": "GET",
+      "path": "/users/profile",
+      "handler": "dashboard/user.profile",
+      "authenticated": true
+    },
+    {
+      "method": "GET",
+      "path": "/users/moderator",
+      "handler": "dashboard/user.moderator",
+      "authenticated": true,
+      "permission": "moderator"
+    },
+    {
+      "method": "GET",
+      "path": "/users/admin",
+      "handler": "dashboard/user.admin",
+      "authenticated": true,
+      "permission": "admin"
+    }
+  ]
+}

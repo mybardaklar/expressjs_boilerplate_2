@@ -61,7 +61,7 @@ const onListening = () => {
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
   debug('Listening on ' + bind)
   consola.ready({
-    message: `Server listening on \`http://${process.env.HOST}:${process.env.PORT}.\``,
+    message: `Server listening on \`http://${process.env.HOST}:${process.env.PORT}\``,
     badge: true
   })
 }

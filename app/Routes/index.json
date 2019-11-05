@@ -3,7 +3,7 @@
     {
       "method": "GET",
       "path": "/",
-      "handler": "IndexController.homepage"
+      "handler": "index.homepage"
     }
   ]
 }

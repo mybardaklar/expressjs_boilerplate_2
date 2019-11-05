@@ -1,0 +1,19 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/dashboard/uploads",
+      "handler": "dashboard/upload.index",
+      "authenticated": true,
+      "permission": "moderator"
+    },
+    {
+      "method": "POST",
+      "path": "/dashboard/upload",
+      "handler": "dashboard/upload.create",
+      "authenticated": true,
+      "permission": "moderator",
+      "middleware": ["FileUpload.multi"]
+    }
+  ]
+}

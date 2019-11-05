@@ -3,17 +3,22 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const User = require('../models/User')
-const { registerValidation, loginValidation } = require('../../validation')
+const User = require('app/Models/user')
+const {
+  registerValidation,
+  loginValidation
+} = require('validations/auth_validation')
 
 class AuthController {
   async register(req, res, next) {
     // validate user informations
-    const { error } = registerValidation.validate(req.body)
-    if (error) return res.status(400).json(error)
+    const { validation_error } = await registerValidation.validateAsync(
+      req.body
+    )
+    if (validation_error) return res.status(400).json(validation_error)
 
     // hash password
-    const salt = await await bcrypt.genSalt(10)
+    const salt = await bcrypt.genSalt(10)
     const hashPassword = await bcrypt.hash(req.body.password, salt)
 
     // create a new user
@@ -47,8 +52,8 @@ class AuthController {
 
   async login(req, res, next) {
     // validate user informations
-    const { error } = loginValidation.validate(req.body)
-    if (error) return res.status(400).json(error)
+    const { validation_error } = await loginValidation.validateAsync(req.body)
+    if (validation_error) return res.status(400).json(validation_error)
 
     // checking if the username exists
     const user = await User.findOne({ username: req.body.username })
