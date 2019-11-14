@@ -7,7 +7,7 @@ const Movie = mongoose.Schema(
   {
     slug: {
       type: String,
-      slug: ['title'],
+      slug: ['title', '_id'],
       unique: true,
       index: true
     },
@@ -38,17 +38,18 @@ const Movie = mongoose.Schema(
       }
     ],
     cast: {
-      type: Map,
-      of: {
-        actors: {
-          type: mongoose.Schema.ObjectId,
-          ref: 'Actor'
-        },
-        directors: {
+      actors: [
+        {
           type: mongoose.Schema.ObjectId,
           ref: 'Actor'
         }
-      }
+      ],
+      directors: [
+        {
+          type: mongoose.Schema.ObjectId,
+          ref: 'Actor'
+        }
+      ]
     },
     tags: [
       {

@@ -11,7 +11,13 @@
       "handler": "movie.create",
       "authenticated": true,
       "permission": "moderator",
-      "middleware": ["FileUpload.singleImage"]
+      "middleware": [
+        {
+          "path": "FileUpload",
+          "method": "upload",
+          "parameters": ["single", "poster"]
+        }
+      ]
     }
   ]
 }

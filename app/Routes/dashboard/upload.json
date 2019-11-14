@@ -13,7 +13,13 @@
       "handler": "dashboard/upload.create",
       "authenticated": true,
       "permission": "moderator",
-      "middleware": ["FileUpload.multi"]
+      "middleware": [
+        {
+          "path": "FileUpload",
+          "method": "upload",
+          "parameters": ["multiple", "upload_images", 3]
+        }
+      ]
     }
   ]
 }

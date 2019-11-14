@@ -10,7 +10,7 @@ class ActorController {
         .select('_id slug photo fullname birth_date death_date')
         .sort({ fullname: 1 })
       if (actors.length < 1)
-        res.status(500).json({ success: false, message: 'No added actor yet.' })
+        res.status(500).json({ success: true, message: 'No added actor yet.' })
 
       res.status(200).json(actors)
     } catch (error) {
@@ -20,19 +20,19 @@ class ActorController {
 
   // create
   async create(req, res, next) {
-    req.body.photo = 'uploads/' + req.file.filename
+    req.body.photo =
+      req.file.destination.replace('static', '') + '/' + req.file.filename
 
     const newActor = new Actor(req.body)
 
     try {
-      // validate fields
       const { validationError } = await newActor.validation(req.body)
       if (validationError) return res.status(400).json(validationError)
 
-      //const savedActor = await newActor.save()
+      const savedActor = await newActor.save()
       res.status(201).json({
         success: true,
-        actor: req.body
+        actor: savedActor
       })
     } catch (error) {
       res.status(500).json(error)

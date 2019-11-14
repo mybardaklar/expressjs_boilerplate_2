@@ -17,8 +17,14 @@
       "path": "/users/user",
       "handler": "dashboard/user.user_create",
       "authenticated": true,
-      "middleware": ["FileUpload.singleImage"],
-      "permission": "moderator"
+      "permission": "moderator",
+      "middleware": [
+        {
+          "path": "FileUpload",
+          "method": "upload",
+          "parameters": ["single", "movie_photo"]
+        }
+      ]
     },
     {
       "method": "GET",

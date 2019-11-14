@@ -5,6 +5,12 @@ const Joi = require('@hapi/joi')
 
 const Actor = mongoose.Schema(
   {
+    slug: {
+      type: String,
+      slug: ['fullname'],
+      unique: true,
+      index: true
+    },
     photo: {
       type: String,
       required: true
@@ -28,12 +34,6 @@ const Actor = mongoose.Schema(
     death_place: String,
     death_date: Date,
     description: String,
-    slug: {
-      type: String,
-      slug: ['fullname'],
-      unique: true,
-      index: true
-    },
     movies: [
       {
         type: mongoose.Schema.ObjectId,

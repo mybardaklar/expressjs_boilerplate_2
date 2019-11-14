@@ -5,8 +5,7 @@ const path = require('path')
 
 class FileUpload {
   constructor() {
-    this.single = this.single.bind(this)
-    this.multi = this.multi.bind(this)
+    this.upload = this.upload.bind(this)
 
     // define multer's storage
     this.storage = multer.diskStorage({
@@ -14,8 +13,11 @@ class FileUpload {
         let type = file.mimetype
         let typeArray = type.split('/')
 
-        if (typeArray[0] === 'image') cb(null, './static/uploads/image')
-        else if (typeArray[0] === 'text') cb(null, './static/uploads/text')
+        if (typeArray[0] === 'image')
+          cb(null, process.env.UPLOAD_FOLDER + process.env.UPLOAD_IMAGE_FOLDER)
+        else if (typeArray[0] === 'text')
+          cb(null, process.env.UPLOAD_FOLDER + process.env.UPLOAD_TEXT_FOLDER)
+        else cb(null, process.env.UPLOAD_FOLDER)
       },
       filename: (req, file, cb) => {
         cb(
@@ -27,28 +29,43 @@ class FileUpload {
         )
       }
     })
-
-    this.single_upload = multer({
-      storage: this.storage,
-      limits: {
-        fileSize: 1024 * 1024 * 5
-      }
-    }).single('single_upload')
-
-    this.multi_upload = multer({
-      storage: this.storage,
-      limits: {
-        fileSize: 1024 * 1024 * 5
-      }
-    }).array('multi_upload')
   }
 
-  async single(req, res, next) {
-    return this.single_upload(req, res, next)
-  }
+  upload(type = 'single', fieldname = 'file_upload', maxCount) {
+    return async (req, res, next) => {
+      switch (type) {
+        case 'single':
+          return await multer({
+            storage: this.storage,
+            limits: {
+              fileSize: 1024 * 1024 * 5
+            }
+          }).single(fieldname)(req, res, next)
+          break
 
-  async multi(req, res, next) {
-    return this.multi_upload(req, res, next)
+        case 'multiple':
+          return await multer({
+            storage: this.storage,
+            limits: {
+              fileSize: 1024 * 1024 * 5
+            }
+          }).array(fieldname, maxCount)(req, res, next)
+          break
+
+        case 'fields':
+          return await multer({
+            storage: this.storage,
+            limits: {
+              fileSize: 1024 * 1024 * 5
+            }
+          }).fields(fieldname)(req, res, next)
+          break
+
+        default:
+          next()
+          break
+      }
+    }
   }
 }
 
