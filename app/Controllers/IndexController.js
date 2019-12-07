@@ -2,9 +2,13 @@
 
 class IndexController {
   homepage(req, res, next) {
-    res.render('index', {
-      head_title: 'Homepage'
+    res.json({
+      message: 'Hello world'
     })
+  }
+
+  upload(req, res, next) {
+    res.json(req.files)
   }
 }
 

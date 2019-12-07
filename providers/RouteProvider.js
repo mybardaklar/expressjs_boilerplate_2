@@ -3,6 +3,7 @@ const consola = require('consola')
 const roles = require('user-groups-roles')
 
 const AuthenticationMiddleware = require('./AuthenticationProvider')
+const FileUpload = require('helpers/FileUpload')
 
 class Router {
   constructor() {
@@ -91,6 +92,7 @@ class Router {
   get(args) {
     let Middleware = []
     let Authentication = []
+    let Files = []
 
     if (args.middleware) {
       Middleware = this.middlewareExport(args.middleware)
@@ -126,9 +128,20 @@ class Router {
       }
     }
 
+    if (args.fileUpload) {
+      Files.push(
+        FileUpload.upload(
+          args.fileUpload.type,
+          args.fileUpload.fieldname,
+          args.fileUpload.size,
+          args.fileUpload.maxCount
+        )
+      )
+    }
+
     app.get(
       args.path,
-      [...Authentication, ...Middleware],
+      [...Authentication, ...Files, ...Middleware],
       this.controllerExport(args.handler)
     )
   }
@@ -137,6 +150,7 @@ class Router {
   post(args) {
     let Middleware = []
     let Authentication = []
+    let Files = []
 
     if (args.middleware) {
       Middleware = this.middlewareExport(args.middleware)
@@ -172,9 +186,20 @@ class Router {
       }
     }
 
+    if (args.fileUpload) {
+      Files.push(
+        FileUpload.upload(
+          args.fileUpload.type,
+          args.fileUpload.fieldname,
+          args.fileUpload.size,
+          args.fileUpload.maxCount
+        )
+      )
+    }
+
     app.post(
       args.path,
-      [...Authentication, ...Middleware],
+      [...Authentication, ...Files, ...Middleware],
       this.controllerExport(args.handler)
     )
   }
@@ -183,6 +208,7 @@ class Router {
   put(args) {
     let Middleware = []
     let Authentication = []
+    let Files = []
 
     if (args.middleware) {
       Middleware = this.middlewareExport(args.middleware)
@@ -218,9 +244,20 @@ class Router {
       }
     }
 
+    if (args.fileUpload) {
+      Files.push(
+        FileUpload.upload(
+          args.fileUpload.type,
+          args.fileUpload.fieldname,
+          args.fileUpload.size,
+          args.fileUpload.maxCount
+        )
+      )
+    }
+
     app.put(
       args.path,
-      [...Authentication, ...Middleware],
+      [...Authentication, ...Files, ...Middleware],
       this.controllerExport(args.handler)
     )
   }
@@ -229,6 +266,7 @@ class Router {
   patch(args) {
     let Middleware = []
     let Authentication = []
+    let Files = []
 
     if (args.middleware) {
       Middleware = this.middlewareExport(args.middleware)
@@ -264,9 +302,20 @@ class Router {
       }
     }
 
+    if (args.fileUpload) {
+      Files.push(
+        FileUpload.upload(
+          args.fileUpload.type,
+          args.fileUpload.fieldname,
+          args.fileUpload.size,
+          args.fileUpload.maxCount
+        )
+      )
+    }
+
     app.patch(
       args.path,
-      [...Authentication, ...Middleware],
+      [...Authentication, ...Files, ...Middleware],
       this.controllerExport(args.handler)
     )
   }
@@ -275,6 +324,7 @@ class Router {
   delete(args) {
     let Middleware = []
     let Authentication = []
+    let Files = []
 
     if (args.middleware) {
       Middleware = this.middlewareExport(args.middleware)
@@ -310,9 +360,20 @@ class Router {
       }
     }
 
+    if (args.fileUpload) {
+      Files.push(
+        FileUpload.upload(
+          args.fileUpload.type,
+          args.fileUpload.fieldname,
+          args.fileUpload.size,
+          args.fileUpload.maxCount
+        )
+      )
+    }
+
     app.delete(
       args.path,
-      [...Authentication, ...Middleware],
+      [...Authentication, ...Files, ...Middleware],
       this.controllerExport(args.handler)
     )
   }
