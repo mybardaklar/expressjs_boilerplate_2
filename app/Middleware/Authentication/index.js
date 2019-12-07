@@ -1,45 +1,62 @@
 'use strict'
 
 const passport = require('passport')
+const roles = require('user-groups-roles')
 
 class AuthenticationMiddleware {
-  constructor() {
-    this.roles = ['user', 'moderator', 'admin']
+  isAuthenticated(args) {
+    return async (req, res, next) => {
+      if (args) {
+        return await passport.authenticate(
+          'jwt',
+          { session: false },
+          (err, user, info) => {
+            if (err) {
+              return next(err)
+            }
 
-    this.checkPermission = this.checkPermission.bind(this)
-  }
+            if (!user) {
+              return res.status(401).json({
+                success: false,
+                message: 'Unauthorized user. You must be logged in.'
+              })
+            }
 
-  async isAuthenticated(req, res, next) {
-    if (res.locals._authentication.authenticated) {
-      return await passport.authenticate('jwt', { session: false })(
-        req,
-        res,
-        next
-      )
-    }
-    return next()
-  }
-
-  async checkPermission(req, res, next) {
-    if (res.locals._authentication.permission) {
-      const permissionIndex = await this.roles.indexOf(
-        res.locals._authentication.permission
-      )
-      const sliceRoles = await this.roles.slice(permissionIndex)
-      const isAuthorized = await sliceRoles.filter(
-        (role) => role === req.user.role
-      )
-
-      if (isAuthorized.length > 0) {
-        return next()
-      } else {
-        return res.status(401).json({
-          success: false,
-          message: 'Unauthorized user.'
-        })
+            req.logIn(user, function(err) {
+              if (err) {
+                return next(err)
+              }
+              return next()
+            })
+          }
+        )(req, res, next)
       }
+      return next()
     }
-    return next()
+  }
+
+  checkPermission(args) {
+    return (req, res, next) => {
+      if (args.permissions && args.path && args.method) {
+        const verifyPermission = roles.getRoleRoutePrivilegeValue(
+          req.user.role,
+          args.path,
+          args.method
+        )
+
+        if (!verifyPermission) {
+          return res.status(401).json({
+            success: false,
+            message: `You cannot access this endpoint. Your role is '${
+              req.user.role
+            }'. If you want to access, your role must be '${Object.keys(
+              args.permissions
+            ).join(' or ')}'`
+          })
+        }
+      }
+      return next()
+    }
   }
 }
 

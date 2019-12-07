@@ -8,6 +8,7 @@ const passport = require('passport')
 
 require('dotenv').config()
 require('app-module-path').addPath(__dirname)
+require('providers')['DatabaseProvider']
 
 const app = express()
 
@@ -17,10 +18,6 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'static')))
 app.use(passport.initialize())
-
-app.set('view engine', 'pug')
-
 app.use(require('providers')['RouteProvider'])
-require('providers')['DatabaseProvider']
 
 module.exports = app

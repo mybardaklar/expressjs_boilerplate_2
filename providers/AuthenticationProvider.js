@@ -1,9 +1,6 @@
 'use strict'
 
+require('config/roles')
 require('app/Middleware/Authentication/JwtStrategy')
-const Authentication = require('app/Middleware/Authentication/index')
 
-module.exports = [
-  Authentication.isAuthenticated,
-  Authentication.checkPermission
-]
+module.exports = require('app/Middleware/Authentication/index')

@@ -10,7 +10,7 @@ const {
 } = require('validations/auth_validation')
 
 class AuthController {
-  async register(req, res, next) {
+  async signUp(req, res, next) {
     // validate user informations
     const { validation_error } = await registerValidation.validateAsync(
       req.body
@@ -50,7 +50,7 @@ class AuthController {
     }
   }
 
-  async login(req, res, next) {
+  async signIn(req, res, next) {
     // validate user informations
     const { validation_error } = await loginValidation.validateAsync(req.body)
     if (validation_error) return res.status(400).json(validation_error)

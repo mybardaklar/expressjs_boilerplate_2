@@ -26,3 +26,11 @@ const strategy = new JwtStrategy(opts, async (jwt_payload, next) => {
 })
 
 passport.use(strategy)
+
+passport.serializeUser((user, done) => {
+  done(null, user)
+})
+
+passport.deserializeUser((user, done) => {
+  done(null, user)
+})

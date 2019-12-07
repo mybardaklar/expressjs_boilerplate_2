@@ -33,37 +33,17 @@ class FileUpload {
 
   upload(type = 'single', fieldname = 'file_upload', maxCount) {
     return async (req, res, next) => {
-      switch (type) {
-        case 'single':
-          return await multer({
-            storage: this.storage,
-            limits: {
-              fileSize: 1024 * 1024 * 5
-            }
-          }).single(fieldname)(req, res, next)
-          break
+      try {
+        const upload = await multer({
+          storage: this.storage,
+          limits: {
+            fileSize: 1024 * 1024 * 5
+          }
+        })[type](fieldname)(req, res, next)
 
-        case 'multiple':
-          return await multer({
-            storage: this.storage,
-            limits: {
-              fileSize: 1024 * 1024 * 5
-            }
-          }).array(fieldname, maxCount)(req, res, next)
-          break
-
-        case 'fields':
-          return await multer({
-            storage: this.storage,
-            limits: {
-              fileSize: 1024 * 1024 * 5
-            }
-          }).fields(fieldname)(req, res, next)
-          break
-
-        default:
-          next()
-          break
+        return upload
+      } catch (error) {
+        res.send(error)
       }
     }
   }

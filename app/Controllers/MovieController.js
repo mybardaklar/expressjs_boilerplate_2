@@ -31,23 +31,7 @@ class MovieController {
   }
 
   async create(req, res, next) {
-    req.body.poster =
-      req.file.destination.replace('static', '') + '/' + req.file.filename
-
-    const newMovie = new Movie(req.body)
-
-    try {
-      const { validationError } = await newMovie.validation(req.body)
-      if (validationError) return res.status(400).json(validationError)
-
-      const savedMovie = await newMovie.save()
-      res.status(201).json({
-        success: true,
-        movie: savedMovie
-      })
-    } catch (error) {
-      res.status(500).json(error)
-    }
+    res.send('MovieController.create')
   }
 }
 

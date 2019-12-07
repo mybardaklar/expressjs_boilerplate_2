@@ -3,7 +3,7 @@
 class UserController {
   index(req, res, next) {
     res.status(200).json({
-      message: 'Everyone can access this page.'
+      message: 'GET /users/user.'
     })
   }
 

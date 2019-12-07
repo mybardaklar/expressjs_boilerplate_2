@@ -10,7 +10,7 @@ class ActorController {
         .select('_id slug photo fullname birth_date death_date')
         .sort({ fullname: 1 })
       if (actors.length < 1)
-        res.status(500).json({ success: true, message: 'No added actor yet.' })
+        res.status(200).json({ success: true, message: 'No added actor yet.' })
 
       res.status(200).json(actors)
     } catch (error) {

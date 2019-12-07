@@ -1,45 +1,354 @@
-'use strict'
-
-const express = require('express')
-const path = require('path')
-const glob = require('glob')
+const app = require('express')()
 const consola = require('consola')
-const compose = require('compose-middleware').compose
+const roles = require('user-groups-roles')
+
 const AuthenticationMiddleware = require('./AuthenticationProvider')
 
-const app = express()
+class Router {
+  constructor() {
+    this.routes = require('routes.js')
+    this.export(this.routes)
+  }
 
-glob.sync('app/Routes/**/*.json').forEach((file) => {
-  let routerFile = require(path.resolve(file))
+  export(routes) {
+    routes.forEach((route) => {
+      switch (route.method) {
+        case 'get':
+          this.get(route)
+          break
 
-  routerFile.routes.forEach((route) => {
-    let method = route.method.toLowerCase()
+        case 'post':
+          this.post(route)
+          break
 
-    // Custom middleware
-    let CustomMiddleware = []
-    if (route.middleware) {
-      route.middleware.forEach((middleware) => {
-        let ControllerFile = require(`app/Middleware/${middleware.path}`)
-        let ControllerMethod = middleware.method
-        if (middleware.parameters)
-          CustomMiddleware.push(
-            ControllerFile[ControllerMethod](...middleware.parameters)
-          )
-        else CustomMiddleware.push(ControllerFile[ControllerMethod])
+        case 'put':
+          this.put(route)
+          break
+
+        case 'patch':
+          this.patch(route)
+          break
+
+        case 'delete':
+          this.delete(route)
+          break
+
+        default:
+          this.group(route.group)
+          break
+      }
+    })
+  }
+
+  // Group HTTP methods
+  group(args) {
+    let Middleware = []
+    let Prefix = null
+
+    if (args.middleware) {
+      Middleware = this.middlewareExport(args.middleware)
+    }
+
+    if (args.prefix) {
+      Prefix = args.prefix
+      app.use(Prefix, [
+        AuthenticationMiddleware.isAuthenticated(args.authenticated),
+        AuthenticationMiddleware.checkPermission({
+          permissions: args.permissions,
+          method: args.method,
+          path: args.path
+        }),
+        ...Middleware
+      ])
+    }
+
+    args.endpoints.forEach((item) => {
+      if (args.authenticated) item.authenticated = 1
+
+      if (Prefix) {
+        if (item.path === '/') item.path = Prefix
+        else item.path = Prefix + item.path
+      } else {
+        if (args.middleware) {
+          if (item.middleware) {
+            item.middleware = [].concat(...args.middleware, item.middleware)
+          } else {
+            item.middleware = [...args.middleware]
+          }
+        }
+
+        if (typeof args.authenticated === 'boolean')
+          item.authenticated = args.authenticated
+      }
+
+      if (args.permissions) item.permissions = args.permissions
+    })
+
+    this.export(args.endpoints)
+  }
+
+  // GET method
+  get(args) {
+    let Middleware = []
+    let Authentication = []
+
+    if (args.middleware) {
+      Middleware = this.middlewareExport(args.middleware)
+    }
+
+    if (args.permissions) {
+      roles.createNewPrivileges([args.path, 'GET'], args.path, false)
+
+      Object.keys(args.permissions).forEach((role) => {
+        roles.addPrivilegeToRole(
+          role,
+          [args.path, 'GET'],
+          args.permissions[role]
+        )
       })
     }
 
-    // Transfer authentication informations
-    let PagePermissions = (req, res, next) => {
-      res.locals._authentication = {
-        authenticated: route.authenticated,
-        permission: route.permission
+    if (args.authenticated) {
+      if (typeof args.authenticated === 'boolean') {
+        Authentication.push(
+          AuthenticationMiddleware.isAuthenticated(args.authenticated)
+        )
       }
-      next()
+
+      if (args.permissions) {
+        Authentication.push(
+          AuthenticationMiddleware.checkPermission({
+            permissions: args.permissions,
+            method: 'GET',
+            path: args.path
+          })
+        )
+      }
     }
 
-    // Controllers
-    let Controller = route.handler.split('.')
+    app.get(
+      args.path,
+      [...Authentication, ...Middleware],
+      this.controllerExport(args.handler)
+    )
+  }
+
+  // POST method
+  post(args) {
+    let Middleware = []
+    let Authentication = []
+
+    if (args.middleware) {
+      Middleware = this.middlewareExport(args.middleware)
+    }
+
+    if (args.permissions) {
+      roles.createNewPrivileges([args.path, 'POST'], args.path, false)
+
+      Object.keys(args.permissions).forEach((role) => {
+        roles.addPrivilegeToRole(
+          role,
+          [args.path, 'POST'],
+          args.permissions[role]
+        )
+      })
+    }
+
+    if (args.authenticated) {
+      if (typeof args.authenticated === 'boolean') {
+        Authentication.push(
+          AuthenticationMiddleware.isAuthenticated(args.authenticated)
+        )
+      }
+
+      if (args.permissions) {
+        Authentication.push(
+          AuthenticationMiddleware.checkPermission({
+            permissions: args.permissions,
+            method: 'POST',
+            path: args.path
+          })
+        )
+      }
+    }
+
+    app.post(
+      args.path,
+      [...Authentication, ...Middleware],
+      this.controllerExport(args.handler)
+    )
+  }
+
+  // PUT method
+  put(args) {
+    let Middleware = []
+    let Authentication = []
+
+    if (args.middleware) {
+      Middleware = this.middlewareExport(args.middleware)
+    }
+
+    if (args.permissions) {
+      roles.createNewPrivileges([args.path, 'PUT'], args.path, false)
+
+      Object.keys(args.permissions).forEach((role) => {
+        roles.addPrivilegeToRole(
+          role,
+          [args.path, 'PUT'],
+          args.permissions[role]
+        )
+      })
+    }
+
+    if (args.authenticated) {
+      if (typeof args.authenticated === 'boolean') {
+        Authentication.push(
+          AuthenticationMiddleware.isAuthenticated(args.authenticated)
+        )
+      }
+
+      if (args.permissions) {
+        Authentication.push(
+          AuthenticationMiddleware.checkPermission({
+            permissions: args.permissions,
+            method: 'PUT',
+            path: args.path
+          })
+        )
+      }
+    }
+
+    app.put(
+      args.path,
+      [...Authentication, ...Middleware],
+      this.controllerExport(args.handler)
+    )
+  }
+
+  // PATCH method
+  patch(args) {
+    let Middleware = []
+    let Authentication = []
+
+    if (args.middleware) {
+      Middleware = this.middlewareExport(args.middleware)
+    }
+
+    if (args.permissions) {
+      roles.createNewPrivileges([args.path, 'PATCH'], args.path, false)
+
+      Object.keys(args.permissions).forEach((role) => {
+        roles.addPrivilegeToRole(
+          role,
+          [args.path, 'PATCH'],
+          args.permissions[role]
+        )
+      })
+    }
+
+    if (args.authenticated) {
+      if (typeof args.authenticated === 'boolean') {
+        Authentication.push(
+          AuthenticationMiddleware.isAuthenticated(args.authenticated)
+        )
+      }
+
+      if (args.permissions) {
+        Authentication.push(
+          AuthenticationMiddleware.checkPermission({
+            permissions: args.permissions,
+            method: 'PATCH',
+            path: args.path
+          })
+        )
+      }
+    }
+
+    app.patch(
+      args.path,
+      [...Authentication, ...Middleware],
+      this.controllerExport(args.handler)
+    )
+  }
+
+  // DELETE method
+  delete(args) {
+    let Middleware = []
+    let Authentication = []
+
+    if (args.middleware) {
+      Middleware = this.middlewareExport(args.middleware)
+    }
+
+    if (args.permissions) {
+      roles.createNewPrivileges([args.path, 'DELETE'], args.path, false)
+
+      Object.keys(args.permissions).forEach((role) => {
+        roles.addPrivilegeToRole(
+          role,
+          [args.path, 'DELETE'],
+          args.permissions[role]
+        )
+      })
+    }
+
+    if (args.authenticated) {
+      if (typeof args.authenticated === 'boolean') {
+        Authentication.push(
+          AuthenticationMiddleware.isAuthenticated(args.authenticated)
+        )
+      }
+
+      if (args.permissions) {
+        Authentication.push(
+          AuthenticationMiddleware.checkPermission({
+            permissions: args.permissions,
+            method: 'DELETE',
+            path: args.path
+          })
+        )
+      }
+    }
+
+    app.delete(
+      args.path,
+      [...Authentication, ...Middleware],
+      this.controllerExport(args.handler)
+    )
+  }
+
+  middlewareExport(middleware) {
+    let MiddlewareArray = []
+    middleware.filter(Array).forEach((item) => {
+      let Middleware = item.split(':')
+      let MiddlewareFile = require(`app/Middleware/${
+        Middleware[0].split('.')[0]
+      }`)
+      let MiddlewareMethod = Middleware[0].split('.')[1]
+
+      let MiddlewareParameters = Middleware[1]
+      if (MiddlewareParameters) {
+        MiddlewareParameters = MiddlewareParameters.split(',')
+      }
+
+      if (MiddlewareMethod) {
+        if (MiddlewareParameters) {
+          Middleware = MiddlewareFile[MiddlewareMethod](...MiddlewareParameters)
+        } else {
+          Middleware = MiddlewareFile[MiddlewareMethod]
+        }
+      } else {
+        Middleware = MiddlewareFile
+      }
+
+      MiddlewareArray.push(Middleware)
+    })
+
+    return MiddlewareArray
+  }
+
+  controllerExport(controller) {
+    let Controller = controller.split('.')
     let ControllerFile = require(`app/Controllers/${Controller.slice(
       0,
       -1
@@ -47,75 +356,10 @@ glob.sync('app/Routes/**/*.json').forEach((file) => {
     let ControllerMethod = Controller.slice(-1)
     Controller = ControllerFile[ControllerMethod]
     if (!Controller) consola.error(new Error('Controller method is not found.'))
+    else return Controller
+  }
+}
 
-    // HTTP methods
-    switch (method) {
-      // GET method
-      case 'get':
-        app.get(
-          route.path,
-          PagePermissions,
-          compose(AuthenticationMiddleware),
-          compose(CustomMiddleware),
-          Controller
-        )
-        break
-
-      // POST method
-      case 'post':
-        app.post(
-          route.path,
-          PagePermissions,
-          compose(AuthenticationMiddleware),
-          compose(CustomMiddleware),
-          Controller
-        )
-        break
-
-      // PUT method
-      case 'put':
-        app.put(
-          route.path,
-          PagePermissions,
-          compose(AuthenticationMiddleware),
-          compose(CustomMiddleware),
-          Controller
-        )
-        break
-
-      // PATCH method
-      case 'patch':
-        app.patch(
-          route.path,
-          PagePermissions,
-          compose(AuthenticationMiddleware),
-          compose(CustomMiddleware),
-          Controller
-        )
-        break
-
-      // DELETE method
-      case 'delete':
-        app.delete(
-          route.path,
-          PagePermissions,
-          compose(AuthenticationMiddleware),
-          compose(CustomMiddleware),
-          Controller
-        )
-        break
-
-      default:
-        consola.error(
-          new Error(
-            `"${route.method}" HTTP method is not valid. (${path.resolve(
-              file
-            )})`
-          )
-        )
-        break
-    }
-  })
-})
+new Router()
 
 module.exports = app
