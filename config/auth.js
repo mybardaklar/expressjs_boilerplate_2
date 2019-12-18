@@ -5,7 +5,7 @@ const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const roles = require('user-groups-roles')
 
-const UserSchema = require('app/Models/UserSchema')
+const UserSchema = require('@models/User')
 
 // Creating JWT Strategy with Passport.js
 const opts = {

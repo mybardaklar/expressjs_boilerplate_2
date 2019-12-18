@@ -1,12 +1,13 @@
+'use strict'
+
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
-const Joi = require('@hapi/joi')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 // Schema
 const UserSchema = mongoose.Schema(
   {
-    name: {
+    fullname: {
       type: String,
       required: true
     },
@@ -48,38 +49,4 @@ UserSchema.pre('save', async function(next) {
 // Plugins
 mongoose.plugin(uniqueValidator)
 
-// Validations
-const validation = {}
-validation.signUp = async (args) => {
-  return await Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string()
-      .email()
-      .required()
-      .min(6)
-      .max(75),
-    password: Joi.string()
-      .required()
-      .min(6)
-      .max(75),
-    role: Joi.string()
-  }).validateAsync(args)
-}
-validation.signIn = async (args) => {
-  return await Joi.object({
-    email: Joi.string()
-      .email()
-      .required()
-      .min(6)
-      .max(75),
-    password: Joi.string()
-      .required()
-      .min(6)
-      .max(75)
-  }).validateAsync(args)
-}
-
-module.exports = {
-  validation,
-  model: mongoose.model('User', UserSchema)
-}
+module.exports = mongoose.model('User', UserSchema)

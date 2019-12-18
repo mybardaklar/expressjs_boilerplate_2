@@ -1,3 +1,5 @@
+'use strict'
+
 const roles = require('user-groups-roles')
 
 roles.createNewRole('admin')

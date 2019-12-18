@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports = {
   connection: process.env.DB_CONNECTION,
   mongodb: {

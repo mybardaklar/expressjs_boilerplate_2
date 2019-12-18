@@ -2,13 +2,15 @@
 
 class IndexController {
   homepage(req, res, next) {
-    res.json({
+    return res.json({
       message: 'Hello world'
     })
   }
 
   upload(req, res, next) {
-    res.json(req.files)
+    req.fileUpload(req)
+    console.log(req.files)
+    return res.json(req.files)
   }
 }
 

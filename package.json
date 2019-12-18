@@ -1,24 +1,40 @@
 {
   "name": "express-js-boilerplate",
   "version": "0.0.0",
-  "private": true,
+  "private": false,
   "description": "A boilerplate for Express.js",
   "author": "Muhammed Yasar BARDAKLAR <myasarbardaklar47@gmail.com>",
+  "keywords": [
+    "javascript",
+    "ecmascript",
+    "ecmascript6",
+    "es6",
+    "nodejs",
+    "node.js",
+    "expressjs",
+    "express.js",
+    "eslint",
+    "lint",
+    "prettier"
+  ],
+  "repository": "git@github.com:rinXer7/express-js-boilerplate.git",
+  "license": "MIT",
   "main": "app.js",
   "scripts": {
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
-    "@hapi/joi": "^16.1.7",
-    "app-module-path": "^2.2.0",
-    "bcrypt": "^3.0.6",
+    "@hapi/joi": "^16.1.8",
+    "bcryptjs": "^2.4.3",
     "consola": "^2.10.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
+    "dotenv-expand": "^5.1.0",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
     "mongoose": "^5.7.5",
     "mongoose-slug-updater": "^3.1.4",
     "mongoose-unique-validator": "^2.0.3",
@@ -26,10 +42,19 @@
     "multer": "^1.4.2",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "pug": "^2.0.4",
     "user-groups-roles": "^2.0.4"
   },
   "devDependencies": {
     "nodemon": "^1.19.3"
+  },
+  "_moduleAliases": {
+    "@": ".",
+    "@models": "app/Models",
+    "@validators": "app/Validators",
+    "@controllers": "app/Controllers",
+    "@middleware": "app/Middleware",
+    "@providers": "init/Providers",
+    "@helpers": "init/Helpers",
+    "@config": "config"
   }
 }
