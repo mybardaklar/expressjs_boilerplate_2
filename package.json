@@ -21,13 +21,14 @@
   "license": "MIT",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon app.js",
+    "lint": "eslint --ext .js --ignore-path .gitignore ."
   },
   "dependencies": {
     "@hapi/joi": "^16.1.8",
     "bcryptjs": "^2.4.3",
     "consola": "^2.10.1",
-    "cookie-parser": "~1.4.4",
+    "cookie-parser": "^1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
@@ -38,23 +39,29 @@
     "mongoose": "^5.7.5",
     "mongoose-slug-updater": "^3.1.4",
     "mongoose-unique-validator": "^2.0.3",
-    "morgan": "~1.9.1",
+    "morgan": "^1.9.1",
     "multer": "^1.4.2",
-    "passport": "^0.4.0",
+    "nuxt": "^2.11.0",
+    "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "user-groups-roles": "^2.0.4"
   },
   "devDependencies": {
-    "nodemon": "^1.19.3"
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "nodemon": "^1.19.4",
+    "prettier": "^1.19.1"
   },
   "_moduleAliases": {
     "@": ".",
-    "@models": "app/Models",
-    "@validators": "app/Validators",
-    "@controllers": "app/Controllers",
-    "@middleware": "app/Middleware",
-    "@providers": "init/Providers",
-    "@helpers": "init/Helpers",
-    "@config": "config"
+    "@Config": "config",
+    "@Models": "app/Models",
+    "@Validators": "app/Validators",
+    "@Controllers": "app/Controllers",
+    "@Middleware": "app/Middleware",
+    "@pxlayer/providers": "init/Providers",
+    "@pxlayer/helpers": "init/Helpers"
   }
 }

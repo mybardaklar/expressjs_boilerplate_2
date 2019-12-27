@@ -1,6 +1,6 @@
 'use strict'
 
-const ProductSchema = require('@models/Product')
+const ProductSchema = require('@Models/Product')
 
 class ProductController {
   // [POST] Create a product

@@ -1,6 +1,6 @@
 'use strict'
 
-const OwnerSchema = require('@models/Owner')
+const OwnerSchema = require('@Models/Owner')
 
 class OwnerController {
   async create(req, res, next) {

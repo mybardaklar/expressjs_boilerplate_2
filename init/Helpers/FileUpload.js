@@ -3,7 +3,8 @@
 const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
-const Functions = require('@helpers/Functions')
+const Functions = require('@pxlayer/helpers/Functions')
+const pxlayerConfig = require('@/pxlayer.config')
 
 class FileUpload {
   constructor() {
@@ -11,19 +12,23 @@ class FileUpload {
     this.uploader = this.uploader.bind(this)
     this.upload = this.upload.bind(this)
 
-    this.type = 'single'
-    this.fields = 'files'
-    this.fileSize = '5mb'
-    this.maxCount = null
+    this.type = pxlayerConfig.fileUpload.defaults.type || 'single'
+    this.fields = pxlayerConfig.fileUpload.defaults.fields || 'file'
+    this.fileSize = pxlayerConfig.fileUpload.defaults.fileSize || '5mb'
+    this.maxCount = pxlayerConfig.fileUpload.defaults.maxCount || null
   }
 
   prepare(args) {
     return async (req, res, next) => {
       if (args) {
-        this.type = args.type || 'single'
-        this.fields = args.fields || 'files'
-        this.fileSize = args.fileSize || '5mb'
-        this.maxCount = args.maxCount || null
+        this.type =
+          args.type || pxlayerConfig.fileUpload.defaults.type || 'single'
+        this.fields =
+          args.fields || pxlayerConfig.fileUpload.defaults.fields || 'file'
+        this.fileSize =
+          args.fileSize || pxlayerConfig.fileUpload.defaults.fileSize || '5mb'
+        this.maxCount =
+          args.maxCount || pxlayerConfig.fileUpload.defaults.maxCount || null
       }
 
       req.fileUpload = this.upload

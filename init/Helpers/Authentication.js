@@ -5,7 +5,7 @@ const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const roles = require('user-groups-roles')
 
-const UserSchema = require('@models/User')
+const UserSchema = require('@Models/User')
 
 // Creating JWT Strategy with Passport.js
 const opts = {
@@ -67,9 +67,9 @@ class AuthenticationMiddleware {
   }
 
   checkPermission(args) {
-    return (req, res, next) => {
+    return async (req, res, next) => {
       if (args.permissions && args.path && args.method) {
-        const verifyPermission = roles.getRoleRoutePrivilegeValue(
+        const verifyPermission = await roles.getRoleRoutePrivilegeValue(
           req.user.role,
           args.path,
           args.method

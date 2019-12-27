@@ -1,6 +1,6 @@
 'use strict'
 
-const CategorySchema = require('@models/Category')
+const CategorySchema = require('@Models/Category')
 
 class CategoryController {
   async create(req, res, next) {

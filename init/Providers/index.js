@@ -1,8 +1,8 @@
 'use strict'
 
-const Router = require('./RouteProvider')
-const Database = require('./DatabaseProvider')
-const Authentication = require('./AuthenticationProvider')
+const Router = require('./Router')
+const Database = require('./Database')
+const Authentication = require('./Authentication')
 
 module.exports = {
   Database,

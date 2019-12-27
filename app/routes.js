@@ -1,28 +1,32 @@
 module.exports = [
   // Index endpoints
   {
-    method: 'get',
-    path: '/',
-    handler: 'IndexController.homepage',
-    authenticated: true,
-    permissions: {
-      admin: true
-    }
-  },
-  {
-    method: 'post',
-    path: '/upload',
-    handler: 'IndexController.upload',
-    fileUpload: {
-      type: 'fields',
-      fields: [
+    group: {
+      prefix: '/upload',
+      authenticated: true,
+      permissions: {
+        admin: true
+      },
+      endpoints: [
         {
-          name: 'avatar',
-          maxCount: 1
+          method: 'get',
+          path: '/',
+          handler: 'IndexController.homepage',
+          authenticated: true,
+          permissions: {
+            admin: true
+          }
         },
         {
-          name: 'photos',
-          maxCount: 3
+          method: 'post',
+          path: '/',
+          handler: 'IndexController.upload',
+          validator: 'IndexValidator.create',
+          authenticated: true,
+          fileUpload: {
+            type: 'single',
+            fields: 'photo'
+          }
         }
       ]
     }
@@ -97,6 +101,12 @@ module.exports = [
   {
     group: {
       prefix: '/products',
+      middleware: ['TestMiddleware.index:deneme_1'],
+      authenticated: true,
+      permissions: {
+        admin: true,
+        editor: true
+      },
       endpoints: [
         {
           method: 'post',
