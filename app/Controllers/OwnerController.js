@@ -3,7 +3,7 @@
 const OwnerSchema = require('@Models/Owner')
 
 class OwnerController {
-  async create(req, res, next) {
+  async create(req, res) {
     try {
       // Upload the photo
       await req.FileUpload(req)
@@ -25,7 +25,7 @@ class OwnerController {
     }
   }
 
-  async findAll(req, res, next) {
+  async findAll(req, res) {
     try {
       const owners = await OwnerSchema.find().select(
         '_id name about photo slug createdAt updatedAt'

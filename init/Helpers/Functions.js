@@ -7,17 +7,14 @@ class Functions {
       case 'kb':
       case 'KB':
         return 1024 * value
-        break
 
       case 'mb':
       case 'MB':
         return 1024 * 1024 * value
-        break
 
       case 'gb':
       case 'GB':
         return 1024 * 1024 * value
-        break
     }
   }
 }

@@ -41,7 +41,7 @@ class AuthenticationMiddleware {
         return await passport.authenticate(
           'jwt',
           { session: false },
-          (err, user, info) => {
+          (err, user) => {
             if (err) {
               return next(err)
             }

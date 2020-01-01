@@ -17,7 +17,6 @@ class Server {
 
     this.middleware()
     this.assets()
-    //this.nuxt()
     this.providers()
 
     this.listen()
@@ -38,27 +37,6 @@ class Server {
     this.app.use(express.urlencoded({ extended: false }))
     this.app.use(cookieParser())
     this.app.use(passport.initialize())
-  }
-
-  // Initialize Nuxt.js app
-  async nuxt() {
-    const { Nuxt, Builder } = require('nuxt')
-    const config = require('../nuxt.config.js')
-    config.dev = process.env.NODE_ENV !== 'production'
-
-    const nuxt = new Nuxt(config)
-
-    this.host = nuxt.options.server.host
-    this.port = nuxt.options.server.port
-
-    if (config.dev) {
-      const builder = new Builder(nuxt)
-      await builder.build()
-    } else {
-      await nuxt.ready()
-    }
-
-    this.app.use(nuxt.render)
   }
 
   // Set the static paths

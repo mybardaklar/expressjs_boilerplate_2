@@ -6,7 +6,7 @@ const UserSchema = require('@Models/User')
 
 class AuthController {
   // Sign up controller
-  async signUp(req, res, next) {
+  async signUp(req, res) {
     try {
       // Create a new user
       const newUser = new UserSchema(req.body)
@@ -36,7 +36,7 @@ class AuthController {
   }
 
   // Sign in controller
-  async signIn(req, res, next) {
+  async signIn(req, res) {
     try {
       // Checking username
       const user = await UserSchema.findOne({ email: req.body.email })
@@ -72,7 +72,6 @@ class AuthController {
       }
 
       return res.status(200).json({
-        success: true,
         success: true,
         user: payload,
         token: {

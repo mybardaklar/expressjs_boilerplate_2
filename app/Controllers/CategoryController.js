@@ -3,7 +3,7 @@
 const CategorySchema = require('@Models/Category')
 
 class CategoryController {
-  async create(req, res, next) {
+  async create(req, res) {
     try {
       // Create a new category
       const newCategory = new CategorySchema(req.body)
@@ -19,7 +19,7 @@ class CategoryController {
     }
   }
 
-  async findAll(req, res, next) {
+  async findAll(req, res) {
     try {
       const categories = await CategorySchema.find().select(
         '_id type slug createdAt updatedAt'

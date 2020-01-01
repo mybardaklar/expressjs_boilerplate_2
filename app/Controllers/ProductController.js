@@ -4,7 +4,7 @@ const ProductSchema = require('@Models/Product')
 
 class ProductController {
   // [POST] Create a product
-  async create(req, res, next) {
+  async create(req, res) {
     try {
       // Upload the photo
       await req.FileUpload(req)
@@ -27,7 +27,7 @@ class ProductController {
   }
 
   // [GET] Get all products
-  async findAll(req, res, next) {
+  async findAll(req, res) {
     try {
       const products = await ProductSchema.find().select(
         '_id slug category owner title description photo price stockQuantity rating createdAt updatedAt'
@@ -44,7 +44,7 @@ class ProductController {
   }
 
   // [GET] Get the specified product
-  async find(req, res, next) {
+  async find(req, res) {
     try {
       const product = await ProductSchema.findOne({
         slug: req.params.slug
@@ -63,7 +63,7 @@ class ProductController {
   }
 
   // [PUT] Update the specified product
-  async update(req, res, next) {
+  async update(req, res) {
     try {
       // Upload the photo
       await req.FileUpload(req)
@@ -88,7 +88,7 @@ class ProductController {
   }
 
   // [DELETE] Delete the specified product
-  async delete(req, res, next) {
+  async delete(req, res) {
     try {
       const deletedProduct = await ProductSchema.findOneAndDelete({
         slug: req.params.slug
