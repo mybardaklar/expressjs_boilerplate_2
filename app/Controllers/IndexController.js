@@ -8,7 +8,7 @@ class IndexController {
   }
 
   upload(req, res, next) {
-    req.fileUpload(req)
+    req.fileUpload.move(req)
     console.log(req.file)
     return res.json(req.file)
   }

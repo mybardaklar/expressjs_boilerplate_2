@@ -3,6 +3,7 @@
 const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
+const slugify = require('slugify')
 const Functions = require('@pxlayer/helpers/Functions')
 const pxlayerConfig = require('@/pxlayer.config')
 
@@ -31,7 +32,7 @@ class FileUpload {
           args.maxCount || pxlayerConfig.fileUpload.defaults.maxCount || null
       }
 
-      req.fileUpload = this.upload
+      req.FileUpload = this.upload
 
       return await multer({
         storage: multer.memoryStorage(),
@@ -69,12 +70,16 @@ class FileUpload {
   }
 
   saveFile(file) {
+    console.log(slugify('ASDA-asdasdsa asdsal işr İ ır'))
+
     const filetype = file.mimetype.split('/')[0]
     const filename =
       new Date().toISOString().replace(/:/g, '-') +
       '-' +
-      path.basename(file.originalname, path.extname(file.originalname)) +
-      path.extname(file.originalname)
+      slugify(
+        path.basename(file.originalname, path.extname(file.originalname)) +
+          path.extname(file.originalname)
+      )
     let filepath = null
     let writeStream = null
 

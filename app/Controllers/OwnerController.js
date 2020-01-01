@@ -6,7 +6,7 @@ class OwnerController {
   async create(req, res, next) {
     try {
       // Upload the photo
-      await req.fileUpload(req)
+      await req.FileUpload(req)
 
       // Create a new owner
       const newOwner = new OwnerSchema({

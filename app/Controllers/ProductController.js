@@ -7,7 +7,7 @@ class ProductController {
   async create(req, res, next) {
     try {
       // Upload the photo
-      await req.fileUpload(req)
+      await req.FileUpload(req)
 
       // Create a new product
       const newProduct = new ProductSchema({
@@ -66,7 +66,7 @@ class ProductController {
   async update(req, res, next) {
     try {
       // Upload the photo
-      await req.fileUpload(req)
+      await req.FileUpload(req)
 
       const updatedProduct = await ProductSchema.findOneAndUpdate(
         {

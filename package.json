@@ -44,6 +44,7 @@
     "nuxt": "^2.11.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "slugify": "^1.3.6",
     "user-groups-roles": "^2.0.4"
   },
   "devDependencies": {

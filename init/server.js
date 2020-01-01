@@ -63,7 +63,7 @@ class Server {
 
   // Set the static paths
   async assets() {
-    this.app.use(express.static(path.join(__dirname, 'static')))
+    this.app.use(express.static(path.join(process.cwd(), 'static')))
   }
 
   // Set the all providers

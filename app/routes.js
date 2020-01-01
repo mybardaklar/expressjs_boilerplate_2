@@ -67,7 +67,11 @@ module.exports = [
         {
           method: 'get',
           path: '/',
-          handler: 'CategoryController.findAll'
+          handler: 'CategoryController.findAll',
+          authenticated: true,
+          permissions: {
+            admin: true
+          }
         }
       ]
     }
