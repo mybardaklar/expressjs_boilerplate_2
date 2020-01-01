@@ -12,8 +12,8 @@ class Server {
     this.app = express()
     this.Providers = require('@pxlayer/providers')
 
-    this.host = 'localhost'
-    this.port = 4747
+    this.host = process.env.HOST || 'localhost'
+    this.port = process.env.PORT || 4747
 
     this.middleware()
     this.assets()
