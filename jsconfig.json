@@ -2,14 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@Config/*": ["./config/*"],
-      "@Models/*": ["./app/Models/*"],
-      "@Validators/*": ["./app/Validators/*"],
-      "@Controllers/*": ["./app/Controllers/*"],
-      "@Middleware/*": ["./app/Middleware/*"],
-      "@pxlayer/providers/*": ["./init/Providers/*"],
-      "@pxlayer/helpers/*": ["./init/Helpers/*"]
+      "@pxlayer/*": ["./*"],
+      "@pxlayer/Config/*": ["./config/*"],
+      "@pxlayer/Models/*": ["./app/Models/*"],
+      "@pxlayer/Validators/*": ["./app/Validators/*"],
+      "@pxlayer/Controllers/*": ["./app/Controllers/*"],
+      "@pxlayer/Middleware/*": ["./app/Middleware/*"],
+      "@pxlayer/Providers/*": ["./init/Providers/*"],
+      "@pxlayer/Helpers/*": ["./init/Helpers/*"]
     }
   },
   "exclude": ["node_modules"]

@@ -2,7 +2,7 @@
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const UserSchema = require('@Models/User')
+const UserSchema = require('@pxlayer/Models/User')
 
 class AuthController {
   // Sign up controller

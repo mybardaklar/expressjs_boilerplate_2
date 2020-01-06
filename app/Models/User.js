@@ -30,7 +30,7 @@ const UserSchema = mongoose.Schema(
 
 // Hash password after save
 UserSchema.pre('save', async function(next) {
-  let User = this
+  const User = this
 
   if (this.isModified('password') || this.isNew) {
     try {

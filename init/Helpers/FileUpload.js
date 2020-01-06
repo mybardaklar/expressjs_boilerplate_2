@@ -1,11 +1,11 @@
 'use strict'
 
-const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
+const multer = require('multer')
 const slugify = require('slugify')
-const Functions = require('@pxlayer/helpers/Functions')
-const pxlayerConfig = require('@/pxlayer.config')
+const Functions = require('@pxlayer/Helpers/Functions')
+const pxlayerConfig = require('@pxlayer/pxlayer.config')
 
 class FileUpload {
   constructor() {
@@ -34,12 +34,14 @@ class FileUpload {
 
       req.FileUpload = this.upload
 
-      return await multer({
+      const prepareMulter = await multer({
         storage: multer.memoryStorage(),
         limits: {
           fileSize: Functions.convertSize(this.fileSize)
         }
       })[this.type](this.fields, this.maxCount)(req, res, next)
+
+      return prepareMulter
     }
   }
 
@@ -48,30 +50,26 @@ class FileUpload {
     if (req.files) await this.uploader(req.files)
   }
 
-  async uploader(files) {
+  uploader(files) {
     if (Array.isArray(files)) {
       // multer.array()
       files.forEach((file) => {
         this.saveFile(file)
       })
+    } else if (files.fieldname) {
+      // multer.single()
+      this.saveFile(files)
     } else {
-      if (files.fieldname) {
-        // multer.single()
-        this.saveFile(files)
-      } else {
-        // multer.fields()
-        Object.keys(files).forEach((field) => {
-          files[field].forEach((file) => {
-            this.saveFile(file)
-          })
+      // multer.fields()
+      Object.keys(files).forEach((field) => {
+        files[field].forEach((file) => {
+          this.saveFile(file)
         })
-      }
+      })
     }
   }
 
   saveFile(file) {
-    console.log(slugify('ASDA-asdasdsa asdsal işr İ ır'))
-
     const filetype = file.mimetype.split('/')[0]
     const filename =
       new Date().toISOString().replace(/:/g, '-') +

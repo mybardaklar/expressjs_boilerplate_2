@@ -1,6 +1,6 @@
 'use strict'
 
-const OwnerSchema = require('@Models/Owner')
+const OwnerSchema = require('@pxlayer/Models/Owner')
 
 class OwnerController {
   async create(req, res) {

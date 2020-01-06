@@ -5,16 +5,16 @@ const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const roles = require('user-groups-roles')
 
-const UserSchema = require('@Models/User')
+const UserSchema = require('@pxlayer/Models/User')
 
 // Creating JWT Strategy with Passport.js
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.APP_KEY
+  secretOrKey: process.env.SERVER_KEY
 }
-const strategy = new JwtStrategy(opts, async (jwt_payload, next) => {
+const strategy = new JwtStrategy(opts, async (jwtPayload, next) => {
   try {
-    const userExist = await UserSchema.findById(jwt_payload._id).select(
+    const userExist = await UserSchema.findById(jwtPayload._id).select(
       '_id username email role'
     )
     if (userExist) return next(null, userExist)
@@ -38,7 +38,7 @@ class AuthenticationMiddleware {
   isAuthenticated(args) {
     return async (req, res, next) => {
       if (args) {
-        return await passport.authenticate(
+        const preparePassportJs = await passport.authenticate(
           'jwt',
           { session: false },
           (err, user) => {
@@ -61,6 +61,8 @@ class AuthenticationMiddleware {
             })
           }
         )(req, res, next)
+
+        return preparePassportJs
       }
       return next()
     }

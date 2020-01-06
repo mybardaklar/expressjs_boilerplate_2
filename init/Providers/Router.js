@@ -4,16 +4,16 @@ const app = require('express')()
 const consola = require('consola')
 const roles = require('user-groups-roles')
 
-const pxlayerConfig = require('@/pxlayer.config')
+const pxlayerConfig = require('@pxlayer/pxlayer.config')
 const pxlayerHelpers = {}
 if (pxlayerConfig.authentication && pxlayerConfig.authentication.enabled)
-  pxlayerHelpers.Authentication = require('@pxlayer/providers/Authentication')
+  pxlayerHelpers.Authentication = require('@pxlayer/Providers/Authentication')
 if (pxlayerConfig.fileUpload && pxlayerConfig.fileUpload.enabled)
-  pxlayerHelpers.FileUpload = require('@pxlayer/helpers/FileUpload')
+  pxlayerHelpers.FileUpload = require('@pxlayer/Helpers/FileUpload')
 
 class Router {
   constructor() {
-    this.routes = require('@/app/routes.js')
+    this.routes = require('@pxlayer/app/routes.js')
     this.export(this.routes)
   }
 
@@ -63,7 +63,7 @@ class Router {
 
   // Methods [GET, POST, PUT, PATCH, DELETE]
   method(args) {
-    let Middleware = []
+    const Middleware = []
 
     // Create the privileges
     if (pxlayerConfig.authentication && pxlayerConfig.authentication.roles) {
@@ -145,11 +145,13 @@ class Router {
 
   // Middleware export
   middlewareExport(middleware) {
-    let MiddlewareArray = []
+    const MiddlewareArray = []
     middleware.filter(Array).forEach((item) => {
       let Middleware = item.split(':')
-      let MiddlewareFile = require(`@Middleware/${Middleware[0].split('.')[0]}`)
-      let MiddlewareMethod = Middleware[0].split('.')[1]
+      const MiddlewareFile = require(`@pxlayer/Middleware/${
+        Middleware[0].split('.')[0]
+      }`)
+      const MiddlewareMethod = Middleware[0].split('.')[1]
 
       let MiddlewareParameters = Middleware[1]
       if (MiddlewareParameters) {
@@ -175,10 +177,11 @@ class Router {
   // Controller export
   controllerExport(controller) {
     let Controller = controller.split('.')
-    let ControllerFile = require(`@Controllers/${Controller.slice(0, -1).join(
-      '.'
-    )}`)
-    let ControllerMethod = Controller.slice(-1)
+    const ControllerFile = require(`@pxlayer/Controllers/${Controller.slice(
+      0,
+      -1
+    ).join('.')}`)
+    const ControllerMethod = Controller.slice(-1)
     Controller = ControllerFile[ControllerMethod]
     if (!Controller) consola.error(new Error('Controller method is not found.'))
     else return Controller
@@ -187,16 +190,20 @@ class Router {
   // Validator export
   validatorExport(validator) {
     let Validator = validator.split('.')
-    let ValidatorFile = require(`@Validators/${Validator.slice(0, -1).join(
-      '.'
-    )}`)
-    let ValidatorMethod = Validator.slice(-1)
+    const ValidatorFile = require(`@pxlayer/Validators/${Validator.slice(
+      0,
+      -1
+    ).join('.')}`)
+    const ValidatorMethod = Validator.slice(-1)
     Validator = ValidatorFile[ValidatorMethod]
     if (!Validator) consola.error(new Error('Validator method is not found.'))
     else return Validator
   }
 }
 
-new Router()
-
-module.exports = app
+module.exports = {
+  init: () => {
+    return new Router()
+  },
+  routes: app
+}

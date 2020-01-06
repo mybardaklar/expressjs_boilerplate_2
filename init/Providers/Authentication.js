@@ -1,7 +1,7 @@
 'use strict'
 
 const roles = require('user-groups-roles')
-const pxlayerConfig = require('@/pxlayer.config')
+const pxlayerConfig = require('@pxlayer/pxlayer.config')
 
 if (pxlayerConfig.authentication) {
   if (pxlayerConfig.authentication.roles) {
@@ -11,4 +11,4 @@ if (pxlayerConfig.authentication) {
   }
 }
 
-module.exports = require('@pxlayer/helpers/Authentication')
+module.exports = require('@pxlayer/Helpers/Authentication')

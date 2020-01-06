@@ -1,7 +1,7 @@
 'use strict'
 
-const express = require('express')
 const path = require('path')
+const express = require('express')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
 const consola = require('consola')
@@ -10,7 +10,7 @@ const passport = require('passport')
 class Server {
   constructor() {
     this.app = express()
-    this.Providers = require('@pxlayer/providers')
+    this.Providers = require('@pxlayer/Providers')
 
     this.host = process.env.HOST || 'localhost'
     this.port = process.env.PORT || 4747
@@ -18,11 +18,10 @@ class Server {
     this.middleware()
     this.assets()
     this.providers()
-
     this.listen()
   }
 
-  async listen() {
+  listen() {
     this.app.listen(this.port, this.host)
     consola.ready({
       message: `Server listening on \`http://${this.host}:${this.port}\``,
@@ -31,7 +30,7 @@ class Server {
   }
 
   // Initialize middlewares
-  async middleware() {
+  middleware() {
     this.app.use(logger('dev'))
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: false }))
@@ -40,15 +39,17 @@ class Server {
   }
 
   // Set the static paths
-  async assets() {
+  assets() {
     this.app.use(express.static(path.join(process.cwd(), 'static')))
   }
 
   // Set the all providers
-  async providers() {
+  providers() {
     this.Providers.Database()
-    this.app.use(this.Providers.Router)
+    this.Providers.Router.init()
+
+    this.app.use(this.Providers.Router.routes)
   }
 }
 
-module.exports = Server
+module.exports = new Server()

@@ -5,7 +5,7 @@ const Joi = require('@hapi/joi')
 class UserValidator {
   // [POST] Sign up page
   async signUp(args) {
-    return await Joi.object({
+    const Schema = await Joi.object({
       fullname: Joi.string().required(),
       email: Joi.string()
         .email()
@@ -19,11 +19,13 @@ class UserValidator {
         .max(75),
       role: Joi.string()
     }).validateAsync(args)
+
+    return Schema
   }
 
   // [POST] Sign in page
   async signIn(args) {
-    return await Joi.object({
+    const Schema = await Joi.object({
       email: Joi.string()
         .email()
         .required()
@@ -34,6 +36,8 @@ class UserValidator {
         .min(6)
         .max(75)
     }).validateAsync(args)
+
+    return Schema
   }
 }
 

@@ -45,21 +45,24 @@
     "user-groups-roles": "^2.0.4"
   },
   "devDependencies": {
+    "@nuxtjs/eslint-config": "^2.0.0",
+    "@nuxtjs/eslint-module": "^1.1.0",
     "babel-eslint": "^10.0.3",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-nuxt": "^0.5.0",
     "eslint-plugin-prettier": "^3.1.2",
     "nodemon": "^1.19.4",
     "prettier": "^1.19.1"
   },
   "_moduleAliases": {
-    "@": ".",
-    "@Config": "config",
-    "@Models": "app/Models",
-    "@Validators": "app/Validators",
-    "@Controllers": "app/Controllers",
-    "@Middleware": "app/Middleware",
-    "@pxlayer/providers": "init/Providers",
-    "@pxlayer/helpers": "init/Helpers"
+    "@pxlayer": ".",
+    "@pxlayer/Config": "config",
+    "@pxlayer/Models": "app/Models",
+    "@pxlayer/Validators": "app/Validators",
+    "@pxlayer/Controllers": "app/Controllers",
+    "@pxlayer/Middleware": "app/Middleware",
+    "@pxlayer/Providers": "init/Providers",
+    "@pxlayer/Helpers": "init/Helpers"
   }
 }

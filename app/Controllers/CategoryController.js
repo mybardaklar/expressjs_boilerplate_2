@@ -1,6 +1,6 @@
 'use strict'
 
-const CategorySchema = require('@Models/Category')
+const CategorySchema = require('@pxlayer/Models/Category')
 
 class CategoryController {
   async create(req, res) {

@@ -2,7 +2,7 @@
 
 const consola = require('consola')
 const mongoose = require('mongoose')
-const pxlayerConfig = require('@/pxlayer.config')
+const pxlayerConfig = require('@pxlayer/pxlayer.config')
 
 mongoose.Promise = Promise
 mongoose.connection.on('connected', () => {

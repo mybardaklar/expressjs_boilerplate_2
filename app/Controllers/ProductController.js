@@ -1,6 +1,6 @@
 'use strict'
 
-const ProductSchema = require('@Models/Product')
+const ProductSchema = require('@pxlayer/Models/Product')
 
 class ProductController {
   // [POST] Create a product

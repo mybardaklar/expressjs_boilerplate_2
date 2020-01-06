@@ -5,7 +5,7 @@ const Joi = require('@hapi/joi')
 class ProductValidator {
   // [POST] Create a product
   async create(args) {
-    return await Joi.object({
+    const Schema = await Joi.object({
       category: Joi.string().required(),
       owner: Joi.string().required(),
       title: Joi.string()
@@ -18,11 +18,13 @@ class ProductValidator {
       stockQuantity: Joi.number(),
       rating: Joi.array().items(Joi.number())
     }).validateAsync(args)
+
+    return Schema
   }
 
   // [PUT] Update a product
   async update() {
-    return await Joi.object({
+    const Schema = await Joi.object({
       category: Joi.string(),
       owner: Joi.string(),
       title: Joi.string()
@@ -34,6 +36,8 @@ class ProductValidator {
       stockQuantity: Joi.number(),
       rating: Joi.array().items(Joi.number())
     })
+
+    return Schema
   }
 }
 
