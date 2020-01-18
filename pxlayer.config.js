@@ -1,6 +1,8 @@
 'use strict'
 
 module.exports = {
+  isItRestfulAPI: true,
+
   /*
    * Set the database informations
    * Available database clients: ['MongoDB']
@@ -26,6 +28,7 @@ module.exports = {
 
   fileUpload: {
     enabled: true,
+    storage: 'AWS_S3',
     defaults: {
       type: 'single',
       fields: 'file',

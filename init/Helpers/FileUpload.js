@@ -2,10 +2,17 @@
 
 const path = require('path')
 const fs = require('fs')
+const aws = require('aws-sdk')
 const multer = require('multer')
 const slugify = require('slugify')
 const Functions = require('@pxlayer/Helpers/Functions')
 const pxlayerConfig = require('@pxlayer/pxlayer.config')
+
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  Bucket: process.env.AWS_BUCKET_NAME
+})
 
 class FileUpload {
   constructor() {
@@ -81,50 +88,181 @@ class FileUpload {
     let filepath = null
     let writeStream = null
 
-    switch (filetype) {
-      case 'image':
-        filepath = `${process.env.UPLOAD_IMAGE_FOLDER}/${filename}`
-        writeStream = fs.createWriteStream(filepath)
+    switch (pxlayerConfig.fileUpload.storage) {
+      // Local storage
+      case 'local':
+        switch (filetype) {
+          case 'image':
+            filepath = `${process.env.UPLOAD_IMAGE_FOLDER}/${filename}`
+            writeStream = fs.createWriteStream(filepath)
 
-        writeStream.on('error', (error) => {
-          console.log(error)
-        })
-        writeStream.end(file.buffer)
+            writeStream.on('error', (error) => {
+              console.log(error)
+            })
+            writeStream.end(file.buffer)
 
-        file.filepath = filepath.replace('static', '')
-        file.filename = filename
-        delete file.originalname
-        delete file.buffer
+            file.filename = filename
+            file.filepath = filepath.replace('static', '')
+            delete file.originalname
+            delete file.buffer
+            break
+
+          case 'text':
+            filepath = `${process.env.UPLOAD_TEXT_FOLDER}/${filename}`
+            writeStream = fs.createWriteStream(filepath)
+
+            writeStream.on('error', (error) => {
+              console.log(error)
+            })
+            writeStream.end(file.buffer)
+
+            file.filename = filename
+            file.filepath = filepath.replace('static', '')
+            delete file.originalname
+            delete file.buffer
+            break
+
+          default:
+            filepath = `${process.env.UPLOAD_FOLDER}/${filename}`
+            writeStream = fs.createWriteStream(filepath)
+
+            writeStream.on('error', (error) => {
+              console.log(error)
+            })
+            writeStream.end(file.buffer)
+
+            file.filename = filename
+            file.filepath = filepath.replace('static', '')
+            delete file.originalname
+            delete file.buffer
+            break
+        }
         break
 
-      case 'text':
-        filepath = `${process.env.UPLOAD_TEXT_FOLDER}/${filename}`
-        writeStream = fs.createWriteStream(filepath)
+      // AWS S3 storage
+      case 'AWS_S3':
+        switch (filetype) {
+          case 'image':
+            s3.upload(
+              {
+                Bucket: process.env.AWS_UPLOAD_IMAGE_FOLDER,
+                Key: filename,
+                Body: file.buffer,
+                ACL: 'public-read'
+              },
+              (error, data) => {
+                if (error) throw error
+              }
+            )
 
-        writeStream.on('error', (error) => {
-          console.log(error)
-        })
-        writeStream.end(file.buffer)
+            file.filename = filename
+            file.filepath = `https://${
+              process.env.AWS_BUCKET_NAME
+            }.s3.amazonaws.com${process.env.AWS_UPLOAD_IMAGE_FOLDER.replace(
+              process.env.AWS_BUCKET_NAME,
+              ''
+            )}/${filename}`
+            delete file.originalname
+            delete file.buffer
+            break
 
-        file.filepath = filepath.replace('static', '')
-        file.filename = filename
-        delete file.originalname
-        delete file.buffer
+          case 'text':
+            s3.upload(
+              {
+                Bucket: process.env.AWS_UPLOAD_TEXT_FOLDER,
+                Key: filename,
+                Body: file.buffer,
+                ACL: 'public-read'
+              },
+              (error, data) => {
+                if (error) throw error
+              }
+            )
+
+            file.filename = filename
+            file.filepath = `https://${
+              process.env.AWS_BUCKET_NAME
+            }.s3.amazonaws.com${process.env.AWS_UPLOAD_TEXT_FOLDER.replace(
+              process.env.AWS_BUCKET_NAME,
+              ''
+            )}/${filename}`
+            delete file.originalname
+            delete file.buffer
+            break
+
+          default:
+            s3.upload(
+              {
+                Bucket: process.env.AWS_UPLOAD_FOLDER,
+                Key: filename,
+                Body: file.buffer,
+                ACL: 'public-read'
+              },
+              (error, data) => {
+                if (error) throw error
+              }
+            )
+
+            file.filename = filename
+            file.filepath = `https://${
+              process.env.AWS_BUCKET_NAME
+            }.s3.amazonaws.com${process.env.AWS_UPLOAD_FOLDER.replace(
+              process.env.AWS_BUCKET_NAME,
+              ''
+            )}/${filename}`
+            delete file.originalname
+            delete file.buffer
+            break
+        }
         break
 
       default:
-        filepath = `${process.env.UPLOAD_FOLDER}/${filename}`
-        writeStream = fs.createWriteStream(filepath)
+        switch (filetype) {
+          case 'image':
+            filepath = `${process.env.UPLOAD_IMAGE_FOLDER}/${filename}`
+            writeStream = fs.createWriteStream(filepath)
 
-        writeStream.on('error', (error) => {
-          console.log(error)
-        })
-        writeStream.end(file.buffer)
+            writeStream.on('error', (error) => {
+              console.log(error)
+            })
+            writeStream.end(file.buffer)
 
-        file.filepath = filepath.replace('static', '')
-        file.filename = filename
-        delete file.originalname
-        delete file.buffer
+            file.filename = filename
+            file.filepath = filepath.replace('static', '')
+            delete file.originalname
+            delete file.buffer
+            break
+
+          case 'text':
+            filepath = `${process.env.UPLOAD_TEXT_FOLDER}/${filename}`
+            writeStream = fs.createWriteStream(filepath)
+
+            writeStream.on('error', (error) => {
+              console.log(error)
+            })
+            writeStream.end(file.buffer)
+
+            file.filename = filename
+            file.filepath = filepath.replace('static', '')
+            delete file.originalname
+            delete file.buffer
+            break
+
+          default:
+            filepath = `${process.env.UPLOAD_FOLDER}/${filename}`
+            writeStream = fs.createWriteStream(filepath)
+
+            writeStream.on('error', (error) => {
+              console.log(error)
+            })
+            writeStream.end(file.buffer)
+
+            file.filename = filename
+            file.filepath = filepath.replace('static', '')
+            delete file.originalname
+            delete file.buffer
+            break
+        }
         break
     }
   }

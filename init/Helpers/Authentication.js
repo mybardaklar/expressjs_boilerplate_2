@@ -10,7 +10,7 @@ const UserSchema = require('@pxlayer/Models/User')
 // Creating JWT Strategy with Passport.js
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.SERVER_KEY
+  secretOrKey: process.env.APP_KEY
 }
 const strategy = new JwtStrategy(opts, async (jwtPayload, next) => {
   try {
