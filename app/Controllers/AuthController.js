@@ -31,7 +31,7 @@ class AuthController {
       })
     } catch (error) {
       console.log(error)
-      return res.status(500).send(error)
+      return res.status(500).json(error)
     }
   }
 
@@ -81,7 +81,22 @@ class AuthController {
       })
     } catch (error) {
       console.log(error)
-      return res.status(500).send(error)
+      return res.status(500).json(error)
+    }
+  }
+
+  // Get user informations
+  async userprofile(req, res) {
+    try {
+      const user = await req.user
+
+      return res.status(200).json({
+        success: true,
+        user
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json(error)
     }
   }
 }

@@ -48,6 +48,12 @@ module.exports = [
           path: '/signin',
           handler: 'AuthController.signIn',
           validator: 'AuthValidator.signIn'
+        },
+        {
+          method: 'get',
+          path: '/userprofile',
+          handler: 'AuthController.userprofile',
+          authenticated: true
         }
       ]
     }
@@ -67,11 +73,7 @@ module.exports = [
         {
           method: 'get',
           path: '/',
-          handler: 'CategoryController.findAll',
-          authenticated: true,
-          permissions: {
-            admin: true
-          }
+          handler: 'CategoryController.findAll'
         }
       ]
     }
@@ -105,12 +107,6 @@ module.exports = [
   {
     group: {
       prefix: '/products',
-      middleware: ['TestMiddleware.index:deneme_1'],
-      authenticated: true,
-      permissions: {
-        admin: true,
-        editor: true
-      },
       endpoints: [
         {
           method: 'post',

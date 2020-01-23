@@ -4,6 +4,7 @@ const path = require('path')
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const logger = require('morgan')
+const cors = require('cors')
 const consola = require('consola')
 const passport = require('passport')
 const pxlayerConfig = require('@pxlayer/pxlayer.config')
@@ -17,7 +18,6 @@ class Server {
     this.port = process.env.PORT || 4747
 
     this.middleware()
-    // this.initNuxtApp()
     this.assets()
     this.providers()
     this.listen()
@@ -38,35 +38,8 @@ class Server {
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: false }))
     this.app.use(cookieParser())
+    this.app.use(cors())
     this.app.use(passport.initialize())
-  }
-
-  async initNuxtApp() {
-    const { Nuxt, Builder } = require('nuxt')
-
-    // Import and Set Nuxt.js options
-    const config = require('@pxlayer/nuxt.config.js')
-    config.dev = process.env.NODE_ENV !== 'production'
-
-    // Init Nuxt.js
-    const nuxt = new Nuxt(config)
-
-    const { host, port } = nuxt.options.server
-
-    // Build only in dev mode
-    if (config.dev) {
-      const builder = new Builder(nuxt)
-      await builder.build()
-    } else {
-      await nuxt.ready()
-    }
-
-    // Give nuxt middleware to express
-    this.app.use(nuxt.render)
-
-    // Set host and port
-    this.host = host
-    this.port = port
   }
 
   // Set the static paths
@@ -76,7 +49,7 @@ class Server {
 
   // Set the all providers
   providers() {
-    this.Providers.Database()
+    this.Providers.Database
     this.Providers.Router.init()
 
     if (pxlayerConfig.isItRestfulAPI)
