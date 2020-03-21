@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const UserSchema = pxl.Model('User')
 const { validationResult } = require('express-validator')
+const { errorCodes } = require('../Constants/errorCodes');
 
 class AuthController {
   // Sign up controller
@@ -32,7 +33,9 @@ class AuthController {
           'Successfully signed up and vertification code sent to your email.'
       })
     } catch (error) {
-      return next(error)
+      if (error.code && error.code === errorCodes.DupKeyError.code) {
+				res.status(400).json({ error: { ...errorCodes.DupKeyError } });
+			}
     }
   }
 
