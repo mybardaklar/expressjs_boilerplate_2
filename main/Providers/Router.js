@@ -1,6 +1,8 @@
 'use strict'
 
 const app = require('express')()
+const fs = require('fs')
+const path = require('path')
 const consola = require('consola')
 const roles = require('user-groups-roles')
 
@@ -14,6 +16,8 @@ class Router {
   constructor() {
     this.routes = require('@pxlayer/app/routes.js')
     this.export(this.routes)
+
+    console.log(path.join(__dirname, 'routes'))
   }
 
   export(routes) {
