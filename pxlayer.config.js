@@ -5,11 +5,11 @@ module.exports = {
 
   /*
    * Set the database informations
-   * Available database clients: ['MongoDB']
+   * Available database connections: ['mongodb', 'postgres']
    */
   database: {
-    client: process.env.DB_CLIENT,
-    connection: {
+    connection: process.env.DB_CONNECTION,
+    connect: {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
       user: process.env.DB_USER,
@@ -20,12 +20,35 @@ module.exports = {
 
   /*
    * Set the authentication configurations
+   * https://www.npmjs.com/package/passport-jwt
+   * https://www.npmjs.com/package/user-groups-roles
    */
   authentication: {
     enabled: true,
     roles: ['admin', 'editor', 'seller', 'user']
   },
 
+  /*
+   * Set the email configurations
+   * https://www.npmjs.com/package/email-templates
+   */
+  email: {
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    ssl: process.env.MAIL_SSL,
+    tls: process.env.MAIL_TLS,
+    auth: {
+      user: process.env.MAIL_AUTH_USER,
+      pass: process.env.MAIL_AUTH_PASS
+    }
+  },
+
+  /*
+   * Set the file upload configurations
+   * Available storage connections: ['AWS_S3']
+   * https://www.npmjs.com/package/multer
+   * https://www.npmjs.com/package/aws-sdk
+   */
   fileUpload: {
     enabled: true,
     storage: 'AWS_S3',

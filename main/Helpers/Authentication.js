@@ -5,7 +5,7 @@ const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const roles = require('user-groups-roles')
 
-const UserSchema = require('@pxlayer/Models/User')
+const UserSchema = pxl.Model('User')
 
 // Creating JWT Strategy with Passport.js
 const opts = {
@@ -15,7 +15,7 @@ const opts = {
 const strategy = new JwtStrategy(opts, async (jwtPayload, next) => {
   try {
     const userExist = await UserSchema.findById(jwtPayload._id).select(
-      '_id username email role'
+      '_id fullname email role'
     )
     if (userExist) return next(null, userExist)
 

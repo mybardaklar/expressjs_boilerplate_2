@@ -3,11 +3,11 @@
     "baseUrl": ".",
     "paths": {
       "@pxlayer/*": ["./*"],
-      "@pxlayer/Config/*": ["./config/*"],
       "@pxlayer/Models/*": ["./app/Models/*"],
       "@pxlayer/Validators/*": ["./app/Validators/*"],
       "@pxlayer/Controllers/*": ["./app/Controllers/*"],
       "@pxlayer/Middleware/*": ["./app/Middleware/*"],
+      "@pxlayer/Cron/*": ["./app/Cron/*"],
       "@pxlayer/Providers/*": ["./init/Providers/*"],
       "@pxlayer/Helpers/*": ["./init/Helpers/*"]
     }

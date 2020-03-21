@@ -1,11 +1,10 @@
 'use strict'
 
 const roles = require('user-groups-roles')
-const pxlayerConfig = require('@pxlayer/pxlayer.config')
 
-if (pxlayerConfig.authentication) {
-  if (pxlayerConfig.authentication.roles) {
-    pxlayerConfig.authentication.roles.forEach((role) => {
+if (pxl.config.authentication) {
+  if (pxl.config.authentication.roles) {
+    pxl.config.authentication.roles.forEach((role) => {
       roles.createNewRole(role)
     })
   }

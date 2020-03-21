@@ -1,6 +1,6 @@
 'use strict'
 
-const CategorySchema = require('@pxlayer/Models/Category')
+const CategorySchema = pxl.Model('Category')
 
 class CategoryController {
   async create(req, res) {

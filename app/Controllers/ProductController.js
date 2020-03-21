@@ -1,6 +1,6 @@
 'use strict'
 
-const ProductSchema = require('@pxlayer/Models/Product')
+const ProductSchema = pxl.Model('Product')
 
 class ProductController {
   // [POST] Create a product

@@ -5,8 +5,6 @@ const fs = require('fs')
 const aws = require('aws-sdk')
 const multer = require('multer')
 const slugify = require('slugify')
-const Functions = require('@pxlayer/Helpers/Functions')
-const pxlayerConfig = require('@pxlayer/pxlayer.config')
 
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -20,23 +18,22 @@ class FileUpload {
     this.uploader = this.uploader.bind(this)
     this.upload = this.upload.bind(this)
 
-    this.type = pxlayerConfig.fileUpload.defaults.type || 'single'
-    this.fields = pxlayerConfig.fileUpload.defaults.fields || 'file'
-    this.fileSize = pxlayerConfig.fileUpload.defaults.fileSize || '5mb'
-    this.maxCount = pxlayerConfig.fileUpload.defaults.maxCount || null
+    this.type = pxl.config.fileUpload.defaults.type || 'single'
+    this.fields = pxl.config.fileUpload.defaults.fields || 'file'
+    this.fileSize = pxl.config.fileUpload.defaults.fileSize || '5mb'
+    this.maxCount = pxl.config.fileUpload.defaults.maxCount || null
   }
 
   prepare(args) {
     return async (req, res, next) => {
       if (args) {
-        this.type =
-          args.type || pxlayerConfig.fileUpload.defaults.type || 'single'
+        this.type = args.type || pxl.config.fileUpload.defaults.type || 'single'
         this.fields =
-          args.fields || pxlayerConfig.fileUpload.defaults.fields || 'file'
+          args.fields || pxl.config.fileUpload.defaults.fields || 'file'
         this.fileSize =
-          args.fileSize || pxlayerConfig.fileUpload.defaults.fileSize || '5mb'
+          args.fileSize || pxl.config.fileUpload.defaults.fileSize || '5mb'
         this.maxCount =
-          args.maxCount || pxlayerConfig.fileUpload.defaults.maxCount || null
+          args.maxCount || pxl.config.fileUpload.defaults.maxCount || null
       }
 
       req.FileUpload = this.upload
@@ -44,7 +41,7 @@ class FileUpload {
       const prepareMulter = await multer({
         storage: multer.memoryStorage(),
         limits: {
-          fileSize: Functions.convertSize(this.fileSize)
+          fileSize: pxl.functions.convertSize(this.fileSize)
         }
       })[this.type](this.fields, this.maxCount)(req, res, next)
 
@@ -88,7 +85,7 @@ class FileUpload {
     let filepath = null
     let writeStream = null
 
-    switch (pxlayerConfig.fileUpload.storage) {
+    switch (pxl.config.fileUpload.storage) {
       // Local storage
       case 'local':
         switch (filetype) {

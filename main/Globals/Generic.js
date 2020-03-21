@@ -1,4 +1,8 @@
-class Functions {
+class Generic {
+  Model(model) {
+    return require(`@pxlayer/Models/${model}`)
+  }
+
   convertSize(args) {
     const symbol = args.slice(-2).trim()
     const value = args.slice(0, -2).trim()
@@ -14,9 +18,9 @@ class Functions {
 
       case 'gb':
       case 'GB':
-        return 1024 * 1024 * value
+        return 1024 * 1024 * 1024 * value
     }
   }
 }
 
-module.exports = new Functions()
+module.exports = new Generic()

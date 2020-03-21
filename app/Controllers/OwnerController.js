@@ -1,6 +1,6 @@
 'use strict'
 
-const OwnerSchema = require('@pxlayer/Models/Owner')
+const OwnerSchema = pxl.Model('Owner')
 
 class OwnerController {
   async create(req, res) {

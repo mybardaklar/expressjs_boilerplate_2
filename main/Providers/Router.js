@@ -4,11 +4,10 @@ const app = require('express')()
 const consola = require('consola')
 const roles = require('user-groups-roles')
 
-const pxlayerConfig = require('@pxlayer/pxlayer.config')
 const pxlayerHelpers = {}
-if (pxlayerConfig.authentication && pxlayerConfig.authentication.enabled)
+if (pxl.config.authentication && pxl.config.authentication.enabled)
   pxlayerHelpers.Authentication = require('@pxlayer/Providers/Authentication')
-if (pxlayerConfig.fileUpload && pxlayerConfig.fileUpload.enabled)
+if (pxl.config.fileUpload && pxl.config.fileUpload.enabled)
   pxlayerHelpers.FileUpload = require('@pxlayer/Helpers/FileUpload')
 
 class Router {
@@ -66,7 +65,7 @@ class Router {
     const Middleware = []
 
     // Create the privileges
-    if (pxlayerConfig.authentication && pxlayerConfig.authentication.roles) {
+    if (pxl.config.authentication && pxl.config.authentication.roles) {
       if (args.permissions) {
         roles.createNewPrivileges([args.path, args.method], args.path, false)
 
@@ -80,7 +79,7 @@ class Router {
       }
     }
 
-    if (pxlayerConfig.authentication && pxlayerConfig.authentication.enabled) {
+    if (pxl.config.authentication && pxl.config.authentication.enabled) {
       if (args.authenticated) {
         if (typeof args.authenticated === 'boolean') {
           Middleware.push(
@@ -88,10 +87,7 @@ class Router {
           )
         }
 
-        if (
-          pxlayerConfig.authentication &&
-          pxlayerConfig.authentication.roles
-        ) {
+        if (pxl.config.authentication && pxl.config.authentication.roles) {
           if (args.permissions) {
             Middleware.push(
               pxlayerHelpers.Authentication.checkPermission({
@@ -105,7 +101,7 @@ class Router {
       }
     }
 
-    if (pxlayerConfig.fileUpload && pxlayerConfig.fileUpload.enabled) {
+    if (pxl.config.fileUpload && pxl.config.fileUpload.enabled) {
       if (args.fileUpload) {
         Middleware.push(
           pxlayerHelpers.FileUpload.prepare({
@@ -120,7 +116,7 @@ class Router {
 
     if (args.validator) {
       const currentValidator = this.validatorExport(args.validator)
-      const Validator = async (req, res, next) => {
+      /* const Validator = async (req, res, next) => {
         try {
           await currentValidator(req.body)
           return next()
@@ -128,9 +124,12 @@ class Router {
           console.log(error)
           return res.status(500).json(error)
         }
-      }
+      } */
 
-      Middleware.push(Validator)
+      let Validator = []
+      if (currentValidator.name === 'signUp') Validator = currentValidator()
+
+      /* Middleware.push(Validator) */
     }
 
     if (args.middleware)

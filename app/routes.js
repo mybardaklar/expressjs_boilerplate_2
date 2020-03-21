@@ -50,9 +50,14 @@ module.exports = [
           validator: 'AuthValidator.signIn'
         },
         {
+          method: 'post',
+          path: '/vertification/:token',
+          handler: 'AuthController.vertification'
+        },
+        {
           method: 'get',
-          path: '/userprofile',
-          handler: 'AuthController.userprofile',
+          path: '/me',
+          handler: 'AuthController.me',
           authenticated: true
         }
       ]

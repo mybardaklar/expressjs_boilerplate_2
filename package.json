@@ -33,7 +33,9 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
+    "email-templates": "^7.0.2",
     "express": "^4.17.1",
+    "express-validator": "^6.4.0",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
     "mongoose": "^5.8.3",
@@ -41,8 +43,10 @@
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.9.1",
     "multer": "^1.4.2",
+    "node-cron": "^2.0.3",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "pug": "^2.0.4",
     "slugify": "^1.3.6",
     "user-groups-roles": "^2.0.4"
   },
@@ -56,11 +60,12 @@
   },
   "_moduleAliases": {
     "@pxlayer": ".",
-    "@pxlayer/Config": "config",
+    "@pxlayer.config": "./pxlayer.config.js",
     "@pxlayer/Models": "app/Models",
     "@pxlayer/Validators": "app/Validators",
     "@pxlayer/Controllers": "app/Controllers",
     "@pxlayer/Middleware": "app/Middleware",
+    "@pxlayer/Cron": "app/Cron",
     "@pxlayer/Providers": "main/Providers",
     "@pxlayer/Helpers": "main/Helpers"
   }

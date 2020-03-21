@@ -40,6 +40,32 @@ class Server {
     this.app.use(cookieParser())
     this.app.use(cors())
     this.app.use(passport.initialize())
+    this.app.use((err, req, res, next) => {
+      console.log('HELLO WORLD')
+      const { statusCode, message } = err
+      return res.status(statusCode).send(message)
+
+      /* console.log('çok seviyom')
+      let errorResponse = null
+
+      switch (error.name) {
+        case 'ValidationError':
+          errorResponse = new pxl.ErrorHandler(error.message, 400)
+          break
+
+        case 'TypeError':
+          errorResponse = new pxl.ErrorHandler(error.message, 400)
+          break
+
+        default:
+          break
+      }
+
+      return res.status(errorResponse.status || 500).json({
+        success: false,
+        message: errorResponse.message || 'Internal Server Error'
+      }) */
+    })
   }
 
   // Set the static paths

@@ -2,10 +2,9 @@
 
 const consola = require('consola')
 const mongoose = require('mongoose')
-const pxlayerConfig = require('@pxlayer/pxlayer.config')
 let Database = null
 
-switch (pxlayerConfig.database.client) {
+switch (pxl.config.database.connection) {
   case 'mongodb':
     mongoose.Promise = Promise
     mongoose.connection.on('connected', () => {
@@ -37,7 +36,7 @@ switch (pxlayerConfig.database.client) {
     })
 
     Database = mongoose.connect(
-      `mongodb://${pxlayerConfig.database.connection.user}:${pxlayerConfig.database.connection.password}@${pxlayerConfig.database.connection.host}:${pxlayerConfig.database.connection.port}/${pxlayerConfig.database.connection.database}`,
+      `mongodb://${pxl.config.database.connect.user}:${pxl.config.database.connect.password}@${pxl.config.database.connect.host}:${pxl.config.database.connect.port}/${pxl.config.database.connect.database}`,
       {
         useNewUrlParser: true,
         useFindAndModify: false,
@@ -48,6 +47,10 @@ switch (pxlayerConfig.database.client) {
     break
 
   default:
+    consola.error({
+      message: 'Please provide a database management system.',
+      badge: true
+    })
     break
 }
 
