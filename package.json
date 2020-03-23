@@ -21,13 +21,14 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "dev": "nodemon index.js",
     "lint": "eslint --ext .js --ignore-path .gitignore ."
   },
   "dependencies": {
     "@hapi/joi": "^16.1.8",
     "aws-sdk": "^2.601.0",
     "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
     "consola": "^2.11.3",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
@@ -60,10 +61,10 @@
   },
   "_moduleAliases": {
     "@pxlayer": ".",
-    "@pxlayer.config": "./pxlayer.config.js",
     "@pxlayer/Models": "app/Models",
     "@pxlayer/Validators": "app/Validators",
     "@pxlayer/Controllers": "app/Controllers",
+    "@pxlayer/Routes": "app/Routes",
     "@pxlayer/Middleware": "app/Middleware",
     "@pxlayer/Cron": "app/Cron",
     "@pxlayer/Providers": "main/Providers",

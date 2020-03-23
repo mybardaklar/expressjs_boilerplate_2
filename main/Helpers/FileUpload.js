@@ -36,7 +36,7 @@ class FileUpload {
           args.maxCount || pxl.config.fileUpload.defaults.maxCount || null
       }
 
-      req.FileUpload = this.upload
+      req.pxl = { upload: this.upload }
 
       const prepareMulter = await multer({
         storage: multer.memoryStorage(),

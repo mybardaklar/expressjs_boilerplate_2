@@ -45,13 +45,13 @@ module.exports = {
 
   /*
    * Set the file upload configurations
-   * Available storage connections: ['AWS_S3']
+   * Available storage connections: ['local', 'AWS_S3']
    * https://www.npmjs.com/package/multer
    * https://www.npmjs.com/package/aws-sdk
    */
   fileUpload: {
     enabled: true,
-    storage: 'AWS_S3',
+    storage: 'local',
     defaults: {
       type: 'single',
       fields: 'file',

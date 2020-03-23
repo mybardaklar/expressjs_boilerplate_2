@@ -1,9 +1,9 @@
 'use strict'
 
 class TestMiddleware {
-  index(param1) {
+  index() {
     return (req, res, next) => {
-      console.log(param1)
+      console.log('Test_1')
       next()
     }
   }

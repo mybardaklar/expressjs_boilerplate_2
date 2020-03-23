@@ -2,7 +2,6 @@
 
 const mongoose = require('mongoose')
 const slug = require('mongoose-slug-updater')
-const uniqueValidator = require('mongoose-unique-validator')
 
 // Schema
 const CategorySchema = mongoose.Schema(
@@ -24,6 +23,5 @@ const CategorySchema = mongoose.Schema(
 
 // Plugins
 mongoose.plugin(slug)
-mongoose.plugin(uniqueValidator)
 
 module.exports = mongoose.model('Category', CategorySchema)

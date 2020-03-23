@@ -1,48 +1,7 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
 const { body } = require('express-validator')
-
-/* class AuthValidator {
-  // [POST] Sign up page
-  async signUp(args) {
-    const Schema = await Joi.object({
-      fullname: Joi.string().required(),
-      email: Joi.string()
-        .email()
-        .empty()
-        .trim()
-        .required()
-        .min(6)
-        .max(75),
-      password: Joi.string()
-        .required()
-        .min(6)
-        .max(75),
-      role: Joi.string()
-    }).validateAsync(args, { context: false })
-
-    return Schema
-  }
-
-  // [POST] Sign in page
-  async signIn(args) {
-    const Schema = await Joi.object({
-      email: Joi.string()
-        .email()
-        .empty()
-        .required()
-        .min(6)
-        .max(75),
-      password: Joi.string()
-        .required()
-        .min(6)
-        .max(75)
-    }).validateAsync(args)
-
-    return Schema
-  }
-} */
+const UserSchema = pxl.Model('User')
 
 class AuthValidator {
   // [POST] Sign up page
@@ -54,7 +13,9 @@ class AuthValidator {
         .notEmpty()
         .withMessage('empty')
         .isString()
-        .withMessage('string'),
+        .withMessage('string')
+        .trim()
+        .escape(),
       body('email')
         .exists()
         .withMessage('required')
@@ -65,7 +26,13 @@ class AuthValidator {
         .isEmail()
         .withMessage('email')
         .isLength({ min: '6', max: '75' })
-        .withMessage('length'),
+        .withMessage('length')
+        .custom(async (value) => {
+          const user = await UserSchema.findOne({ email: value })
+          if (user) throw new Error('E-mail already in use')
+        })
+        .trim()
+        .normalizeEmail(),
       body('password')
         .exists()
         .withMessage('required')
@@ -74,27 +41,41 @@ class AuthValidator {
         .isString()
         .withMessage('string')
         .isLength({ min: '6', max: '75' })
-        .withMessage('length'),
+        .withMessage('length')
+        .trim()
+        .escape(),
       body('role')
     ]
   }
 
   // [POST] Sign in page
-  async signIn(args) {
-    const Schema = await Joi.object({
-      email: Joi.string()
-        .email()
-        .empty()
-        .required()
-        .min(6)
-        .max(75),
-      password: Joi.string()
-        .required()
-        .min(6)
-        .max(75)
-    }).validateAsync(args)
-
-    return Schema
+  signIn() {
+    return [
+      body('email')
+        .exists()
+        .withMessage('required')
+        .notEmpty()
+        .withMessage('empty')
+        .isString()
+        .withMessage('string')
+        .isEmail()
+        .withMessage('email')
+        .isLength({ min: '6', max: '75' })
+        .withMessage('length')
+        .trim()
+        .normalizeEmail(),
+      body('password')
+        .exists()
+        .withMessage('required')
+        .notEmpty()
+        .withMessage('empty')
+        .isString()
+        .withMessage('string')
+        .isLength({ min: '6', max: '75' })
+        .withMessage('length')
+        .trim()
+        .escape()
+    ]
   }
 }
 

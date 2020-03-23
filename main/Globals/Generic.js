@@ -1,3 +1,5 @@
+'use strict'
+
 class Generic {
   Model(model) {
     return require(`@pxlayer/Models/${model}`)

@@ -21,7 +21,6 @@ const strategy = new JwtStrategy(opts, async (jwtPayload, next) => {
 
     return next(null, false)
   } catch (error) {
-    console.log(error)
     return next(error, false)
   }
 })
@@ -47,10 +46,12 @@ class AuthenticationMiddleware {
             }
 
             if (!user) {
-              return res.status(401).json({
-                success: false,
-                message: 'Unauthorized user. You must be logged in.'
-              })
+              return next(
+                new pxl.ErrorHandler(
+                  401,
+                  'Unauthorized user. You must be logged in.'
+                )
+              )
             }
 
             req.logIn(user, function(err) {
@@ -78,14 +79,16 @@ class AuthenticationMiddleware {
         )
 
         if (!verifyPermission) {
-          return res.status(401).json({
-            success: false,
-            message: `You cannot access this endpoint. Your role is '${
-              req.user.role
-            }'. If you want to access, your role must be '${Object.keys(
-              args.permissions
-            ).join(' or ')}'`
-          })
+          return next(
+            new pxl.ErrorHandler(
+              401,
+              `You cannot access this endpoint. Your role is '${
+                req.user.role
+              }'. If you want to access, your role must be '${Object.keys(
+                args.permissions
+              ).join(' or ')}'`
+            )
+          )
         }
       }
       return next()

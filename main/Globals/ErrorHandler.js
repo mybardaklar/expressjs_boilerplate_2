@@ -1,10 +1,10 @@
 'use strict'
 
 class ErrorHandler extends Error {
-  constructor(statusCode, message) {
-    super()
+  constructor(statusCode, message, data) {
+    super(message)
     this.statusCode = statusCode
-    this.message = message
+    this.data = data
   }
 }
 

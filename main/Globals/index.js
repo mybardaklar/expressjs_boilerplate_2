@@ -1,3 +1,5 @@
+'use strict'
+
 const Generic = require('./Generic')
 const Mail = require('./Mail')
 const ErrorHandler = require('./ErrorHandler')

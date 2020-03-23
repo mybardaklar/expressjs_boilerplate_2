@@ -9,9 +9,12 @@ class AuthController {
   // Sign up controller
   async signUp(req, res, next) {
     try {
+      // Validation
       const errors = validationResult(req)
       if (!errors.isEmpty())
-        return res.status(422).json({ success: false, errors: errors.mapped() })
+        throw new pxl.ErrorHandler(422, 'Validation error.', {
+          errors: errors.mapped()
+        })
 
       // Create a new user
       const newUser = new UserSchema(req.body)
@@ -39,23 +42,24 @@ class AuthController {
   // Sign in controller
   async signIn(req, res, next) {
     try {
+      // Validation
+      const errors = await validationResult(req)
+      if (!errors.isEmpty())
+        throw new pxl.ErrorHandler(422, 'Validation error.', {
+          errors: errors.mapped()
+        })
+
       // Checking username
       const doc = await UserSchema.findOne({ email: req.body.email })
       if (!doc) {
-        throw {
-          success: false,
-          message: 'Email or password is not correct.'
-        }
+        console.log('asdasdas')
+        throw new pxl.ErrorHandler(401, 'Email or password is not correct.')
       }
 
       // Checking password
       const validPass = await bcrypt.compare(req.body.password, doc.password)
-      if (!validPass) {
-        throw {
-          success: false,
-          message: 'Email or password is not correct.'
-        }
-      }
+      if (!validPass)
+        throw new pxl.ErrorHandler(401, 'Email or password is not correct.')
 
       // create and assign a token
       const payload = {
@@ -76,10 +80,13 @@ class AuthController {
 
       return res.status(200).json({
         success: true,
-        user: payload,
-        token: {
-          type: 'bearer',
-          encoded: token
+        message: 'Successfully signed in.',
+        data: {
+          user: payload,
+          token: {
+            type: 'bearer',
+            encoded: token
+          }
         }
       })
     } catch (error) {
@@ -91,19 +98,9 @@ class AuthController {
     try {
       const token = await jwt.verify(req.params.token, process.env.APP_KEY)
       const doc = await UserSchema.findOne({ email: token.email })
-      if (!doc) {
-        throw {
-          success: false,
-          message: 'Unregistered user.'
-        }
-      } else if (doc.is_active) {
-        throw {
-          success: false,
-          message: 'This user is already approved.'
-        }
-      }
-
-      console.log(req.body)
+      if (!doc) throw new pxl.ErrorHandler(500, 'Unregistered user.')
+      else if (doc.is_active)
+        throw new pxl.ErrorHandler(500, 'This user is already approved.')
 
       if (token.code === parseInt(req.body.code)) {
         await UserSchema.updateOne(
@@ -116,10 +113,7 @@ class AuthController {
           message: 'Your membership has been approved.'
         })
       } else {
-        throw {
-          success: false,
-          message: 'Verification code is wrong.'
-        }
+        throw new pxl.ErrorHandler(500, 'Verification code is wrong.')
       }
     } catch (error) {
       return next(error)

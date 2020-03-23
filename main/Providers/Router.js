@@ -4,6 +4,7 @@ const app = require('express')()
 const fs = require('fs')
 const path = require('path')
 const consola = require('consola')
+const colors = require('colors')
 const roles = require('user-groups-roles')
 
 const pxlayerHelpers = {}
@@ -14,10 +15,15 @@ if (pxl.config.fileUpload && pxl.config.fileUpload.enabled)
 
 class Router {
   constructor() {
-    this.routes = require('@pxlayer/app/routes.js')
-    this.export(this.routes)
+    this.routes = []
 
-    console.log(path.join(__dirname, 'routes'))
+    const routesPath = path.join(process.cwd(), 'app/Routes')
+    fs.readdirSync(routesPath).forEach((filepath) => {
+      let routeFile = require(`@pxlayer/Routes/${filepath}`)
+      this.routes.push(routeFile[0])
+    })
+
+    this.export(this.routes)
   }
 
   export(routes) {
@@ -120,20 +126,8 @@ class Router {
 
     if (args.validator) {
       const currentValidator = this.validatorExport(args.validator)
-      /* const Validator = async (req, res, next) => {
-        try {
-          await currentValidator(req.body)
-          return next()
-        } catch (error) {
-          console.log(error)
-          return res.status(500).json(error)
-        }
-      } */
-
-      let Validator = []
-      if (currentValidator.name === 'signUp') Validator = currentValidator()
-
-      /* Middleware.push(Validator) */
+      let Validator = currentValidator()
+      Middleware.push(Validator)
     }
 
     if (args.middleware)
@@ -149,26 +143,40 @@ class Router {
   // Middleware export
   middlewareExport(middleware) {
     const MiddlewareArray = []
+
     middleware.filter(Array).forEach((item) => {
       let Middleware = item.split(':')
-      const MiddlewareFile = require(`@pxlayer/Middleware/${
-        Middleware[0].split('.')[0]
-      }`)
-      const MiddlewareMethod = Middleware[0].split('.')[1]
+      let MiddlewareFile = null
+      let MiddlewareFileName = Middleware[0].split('.')[0]
+      let MiddlewareMethod = Middleware[0].split('.')[1]
+      let MiddlewareParameters = Middleware[1] ? Middleware[1].split(',') : null
 
-      let MiddlewareParameters = Middleware[1]
-      if (MiddlewareParameters) {
-        MiddlewareParameters = MiddlewareParameters.split(',')
+      // Check middleware file is exists
+      try {
+        MiddlewareFile = require(`@pxlayer/Middleware/${MiddlewareFileName}`)
+      } catch (error) {
+        consola.error(
+          `Cannot find middleware file 'app/Middleware/` +
+            `${MiddlewareFileName}`.red +
+            `'`
+        )
       }
 
-      if (MiddlewareMethod) {
-        if (MiddlewareParameters) {
-          Middleware = MiddlewareFile[MiddlewareMethod](...MiddlewareParameters)
-        } else {
-          Middleware = MiddlewareFile[MiddlewareMethod]
-        }
-      } else {
+      // If middleware file is exists
+      if (MiddlewareFile) {
         Middleware = MiddlewareFile
+
+        // If middleware method is passed
+        if (MiddlewareMethod) {
+          Middleware = MiddlewareFile[MiddlewareMethod]()
+
+          // If middleware method has parameters
+          if (MiddlewareParameters) {
+            Middleware = MiddlewareFile[MiddlewareMethod](
+              ...MiddlewareParameters
+            )
+          }
+        }
       }
 
       MiddlewareArray.push(Middleware)
@@ -180,27 +188,70 @@ class Router {
   // Controller export
   controllerExport(controller) {
     let Controller = controller.split('.')
-    const ControllerFile = require(`@pxlayer/Controllers/${Controller.slice(
-      0,
-      -1
-    ).join('.')}`)
-    const ControllerMethod = Controller.slice(-1)
-    Controller = ControllerFile[ControllerMethod]
-    if (!Controller) consola.error(new Error('Controller method is not found.'))
-    else return Controller
+    let ControllerFileName = Controller[0]
+    let ControllerMethodName = Controller[1]
+    let ControllerFile = null
+
+    // Check controller file is exists
+    try {
+      ControllerFile = require(`@pxlayer/Controllers/${ControllerFileName}`)
+    } catch (error) {
+      consola.error(
+        `Cannot find controller file 'app/Controllers/` +
+          `${ControllerMethodName}`.red +
+          `'`
+      )
+    }
+
+    // If controller file is exists
+    if (ControllerFile) {
+      Controller = ControllerFile[ControllerMethodName]
+
+      // Check controller method is passed
+      if (!Controller)
+        consola.error(
+          `Cannot find controller method '${controller
+            .split('.')
+            .slice(0, -1)
+            .join('.') + '.'}` +
+            `${ControllerMethod}`.red +
+            `'`
+        )
+      else return Controller
+    }
   }
 
   // Validator export
   validatorExport(validator) {
     let Validator = validator.split('.')
-    const ValidatorFile = require(`@pxlayer/Validators/${Validator.slice(
-      0,
-      -1
-    ).join('.')}`)
-    const ValidatorMethod = Validator.slice(-1)
-    Validator = ValidatorFile[ValidatorMethod]
-    if (!Validator) consola.error(new Error('Validator method is not found.'))
-    else return Validator
+    let ValidatorFileName = Validator[0]
+    let ValidatorMethodName = Validator[1]
+    let ValidatorFile = null
+
+    // Check validator file is exists
+    try {
+      ValidatorFile = require(`@pxlayer/Validators/${ValidatorFileName}`)
+    } catch (error) {
+      consola.error(
+        `Cannot find validator file 'app/Validators/` +
+          `${ValidatorFileName}`.red +
+          `'`
+      )
+    }
+
+    // If validator file is exists
+    if (ValidatorFile) {
+      Validator = ValidatorFile[ValidatorMethodName]
+
+      // Check validator method is passed
+      if (!Validator)
+        consola.error(
+          `Cannot find validator method '${ValidatorFileName + '.'}` +
+            `${ValidatorMethodName}`.red +
+            `'`
+        )
+      else return Validator
+    }
   }
 }
 

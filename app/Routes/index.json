@@ -11,6 +11,7 @@
           "method": "get",
           "path": "/",
           "handler": "IndexController.homepage",
+          "middleware": ["Test_1.index"],
           "authenticated": true,
           "permissions": {
             "admin": true

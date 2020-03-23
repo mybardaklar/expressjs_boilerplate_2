@@ -1,17 +1,29 @@
 'use strict'
 
-const Joi = require('@hapi/joi')
+const { body } = require('express-validator')
 
 class IndexValidator {
   // [POST] Create an owner
-  async create(args) {
-    const Schema = await Joi.object({
-      name: Joi.string().required(),
-      about: Joi.string().required(),
-      photo: Joi.string()
-    }).validateAsync(args)
-
-    return Schema
+  create() {
+    return [
+      body('name')
+        .exists()
+        .withMessage('required')
+        .notEmpty()
+        .withMessage('empty')
+        .isString()
+        .withMessage('string')
+        .trim(),
+      body('about')
+        .exists()
+        .withMessage('required')
+        .notEmpty()
+        .withMessage('empty')
+        .isString()
+        .withMessage('string')
+        .trim()
+        .escape()
+    ]
   }
 }
 
