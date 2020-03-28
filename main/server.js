@@ -61,11 +61,12 @@ class Server {
   // Error handling
   errorHandler() {
     this.app.use((error, req, res, next) => {
-      const { statusCode, message, data } = error
+      const { statusCode, message, errorCode, data } = error
       return res.status(statusCode || 500).json({
         success: false,
-        message: message || 'Internal Server Error',
         statusCode: statusCode || 500,
+        errorCode: errorCode || '',
+        message: message || 'Internal Server Error',
         ...data
       })
     })

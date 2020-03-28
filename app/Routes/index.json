@@ -1,7 +1,7 @@
 [
   {
     "group": {
-      "prefix": "/upload",
+      "prefix": "/",
       "authenticted": true,
       "permissions": {
         "admin": true
@@ -15,17 +15,6 @@
           "authenticated": true,
           "permissions": {
             "admin": true
-          }
-        },
-        {
-          "method": "post",
-          "path": "/",
-          "handler": "IndexController.upload",
-          "validator": "IndexValidator.create",
-          "authenticated": true,
-          "fileUpload": {
-            "type": "single",
-            "fields": "photo"
           }
         }
       ]

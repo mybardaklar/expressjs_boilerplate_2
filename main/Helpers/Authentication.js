@@ -5,7 +5,7 @@ const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const roles = require('user-groups-roles')
 
-const UserSchema = pxl.Model('User')
+const UserSchema = require('@pxlayer/Models/User')
 
 // Creating JWT Strategy with Passport.js
 const opts = {

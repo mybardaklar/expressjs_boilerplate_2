@@ -52,10 +52,10 @@ module.exports = {
   fileUpload: {
     enabled: true,
     storage: 'local',
-    defaults: {
-      type: 'single',
-      fields: 'file',
-      fileSize: '5mb'
-    }
+    tmpPath: 'static',
+    path: 'uploads',
+    type: 'single',
+    fields: 'file',
+    fileSize: '5mb'
   }
 }

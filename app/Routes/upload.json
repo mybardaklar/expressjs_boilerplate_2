@@ -1,0 +1,49 @@
+[
+  {
+    "group": {
+      "prefix": "/upload",
+      "endpoints": [
+        {
+          "method": "post",
+          "path": "/single",
+          "handler": "UploadController.single",
+          "validator": "UploadValidator.single",
+          "upload": {
+            "path": "uploads/image",
+            "type": "single",
+            "fields": "single"
+          }
+        },
+        {
+          "method": "post",
+          "path": "/multiple",
+          "handler": "UploadController.multiple",
+          "validator": "UploadValidator.multiple",
+          "upload": {
+            "type": "array",
+            "fields": "multiple",
+            "maxCount": 5
+          }
+        }
+      ]
+    }
+  },
+  {
+    "method": "post",
+    "path": "/upload/fields",
+    "handler": "UploadController.fields",
+    "upload": {
+      "type": "fields",
+      "fields": [
+        {
+          "name": "field1",
+          "maxCount": 1
+        },
+        {
+          "name": "field2",
+          "maxCount": 3
+        }
+      ]
+    }
+  }
+]
