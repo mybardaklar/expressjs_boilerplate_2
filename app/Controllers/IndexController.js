@@ -1,32 +1,20 @@
 'use strict'
 
-const { validationResult } = require('express-validator')
-
 class IndexController {
-  homepage(req, res, next) {
-    /* throw new pxl.ErrorHandler(408, 'asdas', {
-      deneme: 'asdas'
-    }) */
-    res.json({
-      success: true
+  async index(req, res, next) {
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: `Hello world! How is it going?`
     })
   }
 
-  async upload(req, res, next) {
-    try {
-      // Validation
-      const errors = await validationResult(req)
-      if (!errors.isEmpty())
-        throw new pxl.ErrorHandler(422, 'Validation error.', {
-          errors: errors.mapped()
-        })
-
-      await req.pxl.upload(req)
-
-      return res.status(200).json(req.file)
-    } catch (error) {
-      return next(error)
-    }
+  async admin(req, res, next) {
+    res.status(200).json({
+      success: true,
+      statusCode: 200,
+      message: `Hello admin! How is it going?`
+    })
   }
 }
 

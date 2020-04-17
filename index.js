@@ -4,8 +4,8 @@ require('dotenv-expand')(require('dotenv').config())
 require('module-alias/register')
 
 global.pxl = {
-  config: require('./pxlayer.config')
+  config: require('./pxl.config')
 }
-require('@pxlayer/main/Globals')
-require('@pxlayer/Cron')
-require('@pxlayer/main/server')
+require('@pxl/main/Globals')
+require('@pxl/Cron')
+require('@pxl/main/server')

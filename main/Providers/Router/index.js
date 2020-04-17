@@ -13,7 +13,7 @@ class Router {
   constructor() {
     const routesPath = path.join(process.cwd(), 'app/Routes')
     fs.readdirSync(routesPath).forEach((filepath) => {
-      let routeFile = require(`@pxlayer/Routes/${filepath}`)
+      let routeFile = require(`@pxl/Routes/${filepath}`)
       this.export(routeFile)
     })
   }

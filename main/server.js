@@ -7,12 +7,12 @@ const logger = require('morgan')
 const cors = require('cors')
 const consola = require('consola')
 const passport = require('passport')
-const pxlayerConfig = require('@pxlayer/pxlayer.config')
+const pxlConfig = require('@pxl/pxl.config')
 
 class Server {
   constructor() {
     this.app = express()
-    this.Providers = require('@pxlayer/Providers')
+    this.Providers = require('@pxl/Providers')
 
     this.host = process.env.HOST || 'localhost'
     this.port = process.env.PORT || 4747
@@ -40,7 +40,8 @@ class Server {
     this.app.use(express.urlencoded({ extended: false }))
     this.app.use(cookieParser())
     this.app.use(cors())
-    this.app.use(passport.initialize())
+
+    if (pxlConfig.mode !== 'graphql') this.app.use(passport.initialize())
   }
 
   // Set the static paths
@@ -50,12 +51,26 @@ class Server {
 
   // Set the all providers
   providers() {
+    // Provide database
     this.Providers.Database
-    this.Providers.Router.init()
 
-    if (pxlayerConfig.isItRestfulAPI)
-      this.app.use('/api', this.Providers.Router.routes)
-    else this.app.use(this.Providers.Router.routes)
+    // Provide routes or GraphQL
+    switch (pxlConfig.mode) {
+      case 'graphql':
+        this.Providers.GraphQL.init()
+        this.Providers.GraphQL.server.applyMiddleware({ app: this.app })
+        break
+
+      case 'restfulapi':
+        this.Providers.Router.init()
+        this.app.use('/api', this.Providers.Router.routes)
+        break
+
+      default:
+        this.Providers.Router.init()
+        this.app.use(this.Providers.Router.routes)
+        break
+    }
   }
 
   // Error handling

@@ -21,11 +21,12 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
+    "dev": "nodemon --ext js,json,graphql index.js",
     "lint": "eslint --ext .js --ignore-path .gitignore ."
   },
   "dependencies": {
     "@hapi/joi": "^16.1.8",
+    "apollo-server-express": "^2.12.0",
     "aws-sdk": "^2.601.0",
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
@@ -37,7 +38,9 @@
     "email-templates": "^7.0.2",
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
+    "graphql-import": "^1.0.2",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
     "module-alias": "^2.2.2",
     "mongoose": "^5.8.3",
     "mongoose-slug-updater": "^3.1.4",
@@ -60,14 +63,17 @@
     "prettier": "^1.19.1"
   },
   "_moduleAliases": {
-    "@pxlayer": ".",
-    "@pxlayer/Models": "app/Models",
-    "@pxlayer/Validators": "app/Validators",
-    "@pxlayer/Controllers": "app/Controllers",
-    "@pxlayer/Routes": "app/Routes",
-    "@pxlayer/Middleware": "app/Middleware",
-    "@pxlayer/Cron": "app/Cron",
-    "@pxlayer/Providers": "main/Providers",
-    "@pxlayer/Helpers": "main/Helpers"
+    "@pxl": ".",
+    "@pxl/Models": "app/Models",
+    "@pxl/graphql": "graphql",
+    "@pxl/graphql/resolvers": "graphql/Resolvers",
+    "@pxl/graphql/types": "graphql/Types",
+    "@pxl/Validators": "app/Validators",
+    "@pxl/Controllers": "app/Controllers",
+    "@pxl/Routes": "app/Routes",
+    "@pxl/Middleware": "app/Middleware",
+    "@pxl/Cron": "app/Cron",
+    "@pxl/Providers": "main/Providers",
+    "@pxl/Helpers": "main/Helpers"
   }
 }

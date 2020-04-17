@@ -1,3 +1,5 @@
+'use strict'
+
 const consola = require('consola')
 const colors = require('colors')
 
@@ -8,7 +10,7 @@ module.exports = (controller) => {
   let ControllerFile = null
 
   // Check controller file is exists
-  ControllerFile = require(`@pxlayer/Controllers/${ControllerFileName}`)
+  ControllerFile = require(`@pxl/Controllers/${ControllerFileName}`)
   if (!ControllerFile) {
     consola.error(
       `Cannot find controller file 'app/Controllers/` +

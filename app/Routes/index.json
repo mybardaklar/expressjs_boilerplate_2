@@ -1,23 +1,16 @@
 [
   {
-    "group": {
-      "prefix": "/",
-      "authenticted": true,
-      "permissions": {
-        "admin": true
-      },
-      "endpoints": [
-        {
-          "method": "get",
-          "path": "/",
-          "handler": "IndexController.homepage",
-          "middleware": ["Test_1.index"],
-          "authenticated": true,
-          "permissions": {
-            "admin": true
-          }
-        }
-      ]
+    "method": "get",
+    "path": "/",
+    "handler": "IndexController.index"
+  },
+  {
+    "method": "get",
+    "path": "/admin",
+    "handler": "IndexController.admin",
+    "authenticated": true,
+    "permissions": {
+      "admin": true
     }
   }
 ]

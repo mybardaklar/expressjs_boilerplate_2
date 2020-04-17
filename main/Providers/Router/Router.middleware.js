@@ -1,3 +1,5 @@
+'use strict'
+
 const consola = require('consola')
 const colors = require('colors')
 
@@ -12,7 +14,7 @@ module.exports = (middleware) => {
     let MiddlewareParameters = Middleware[1] ? Middleware[1].split(',') : null
 
     // Check middleware file is exists
-    MiddlewareFile = require(`@pxlayer/Middleware/${MiddlewareFileName}`)
+    MiddlewareFile = require(`@pxl/Middleware/${MiddlewareFileName}`)
     if (!MiddlewareFile) {
       consola.error(
         `Cannot find middleware file 'app/Middleware/` +

@@ -1,3 +1,5 @@
+'use strict'
+
 const consola = require('consola')
 const colors = require('colors')
 
@@ -8,7 +10,7 @@ module.exports = (validator) => {
   let ValidatorFile = null
 
   // Check validator file is exists
-  ValidatorFile = require(`@pxlayer/Validators/${ValidatorFileName}`)
+  ValidatorFile = require(`@pxl/Validators/${ValidatorFileName}`)
   if (!ValidatorFile) {
     consola.error(
       `Cannot find validator file 'app/Validators/` +

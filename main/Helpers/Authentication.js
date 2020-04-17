@@ -5,7 +5,7 @@ const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
 const roles = require('user-groups-roles')
 
-const UserSchema = require('@pxlayer/Models/User')
+const UserSchema = require('@pxl/Models/User')
 
 // Creating JWT Strategy with Passport.js
 const opts = {
@@ -49,7 +49,8 @@ class AuthenticationMiddleware {
               return next(
                 new pxl.ErrorHandler(
                   401,
-                  'Unauthorized user. You must be logged in.'
+                  `You cannot access this page. Please sign in to access this page.`,
+                  'UnauthorizedUser'
                 )
               )
             }
@@ -82,11 +83,8 @@ class AuthenticationMiddleware {
           return next(
             new pxl.ErrorHandler(
               401,
-              `You cannot access this endpoint. Your role is '${
-                req.user.role
-              }'. If you want to access, your role must be '${Object.keys(
-                args.permissions
-              ).join(' or ')}'`
+              'You cannot access this endpoint.',
+              'UnauthorizedUser'
             )
           )
         }

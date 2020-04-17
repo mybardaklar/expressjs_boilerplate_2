@@ -7,15 +7,17 @@ const jwt = require('jsonwebtoken')
 // Schema
 const UserSchema = mongoose.Schema(
   {
-    fullname: {
+    username: {
       type: String,
-      required: true
+      required: true,
+      unique: true,
+      index: true
     },
     email: {
       type: String,
-      index: true,
+      required: true,
       unique: true,
-      required: true
+      index: true
     },
     password: { type: String, required: true },
     is_active: {
@@ -29,7 +31,10 @@ const UserSchema = mongoose.Schema(
       required: true,
       default: 'user'
     },
-    address: { type: mongoose.Schema.Types.ObjectId, ref: 'Address' }
+    photo: {
+      type: String,
+      default: '/images/default-user.png'
+    }
   },
   { timestamps: true }
 )

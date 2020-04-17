@@ -11,10 +11,16 @@ class AuthController {
     try {
       // Validation
       const errors = validationResult(req)
-      if (!errors.isEmpty())
-        throw new pxl.ErrorHandler(422, 'Validation error.', {
-          errors: errors.mapped()
-        })
+      if (!errors.isEmpty()) {
+        throw new pxl.ErrorHandler(
+          422,
+          'Please fix validation errors and try again.',
+          'ValidationError',
+          {
+            errors: errors.mapped()
+          }
+        )
+      }
 
       // Create a new user
       const newUser = new UserSchema(req.body)
@@ -24,15 +30,16 @@ class AuthController {
         .from('hi@example.com')
         .to('test@example.com')
         .send({
-          name: newUser.fullname,
+          username: newUser.username,
           token: newUser.token,
           code: await jwt.verify(newUser.token, process.env.APP_KEY).code
         })
 
       return res.status(201).json({
         success: true,
+        statusCode: 201,
         message:
-          'Successfully signed up and vertification code sent to your email.'
+          'Successfully signed up and verification code sent to your email.'
       })
     } catch (error) {
       return next(error)
@@ -43,28 +50,42 @@ class AuthController {
   async signIn(req, res, next) {
     try {
       // Validation
-      const errors = await validationResult(req)
-      if (!errors.isEmpty())
-        throw new pxl.ErrorHandler(422, 'Validation error.', {
-          errors: errors.mapped()
-        })
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        throw new pxl.ErrorHandler(
+          422,
+          'Please fix validation errors and try again.',
+          'ValidationError',
+          {
+            errors: errors.mapped()
+          }
+        )
+      }
 
-      // Checking username
+      // Checking email address
       const doc = await UserSchema.findOne({ email: req.body.email })
       if (!doc) {
-        console.log('asdasdas')
-        throw new pxl.ErrorHandler(401, 'Email or password is not correct.')
+        throw new pxl.ErrorHandler(
+          401,
+          'Email or password is not correct. Please try again.',
+          'NotCorrect'
+        )
       }
 
       // Checking password
       const validPass = await bcrypt.compare(req.body.password, doc.password)
-      if (!validPass)
-        throw new pxl.ErrorHandler(401, 'Email or password is not correct.')
+      if (!validPass) {
+        throw new pxl.ErrorHandler(
+          401,
+          'Email or password is not correct. Please try again.',
+          'NotCorrect'
+        )
+      }
 
       // create and assign a token
       const payload = {
         _id: doc._id,
-        fullname: doc.fullname,
+        username: doc.username,
         email: doc.email,
         role: doc.role
       }
@@ -80,6 +101,7 @@ class AuthController {
 
       return res.status(200).json({
         success: true,
+        statusCode: 200,
         message: 'Successfully signed in.',
         data: {
           user: payload,
@@ -94,26 +116,37 @@ class AuthController {
     }
   }
 
-  async vertification(req, res, next) {
+  async verification(req, res, next) {
     try {
       const token = await jwt.verify(req.params.token, process.env.APP_KEY)
-      const doc = await UserSchema.findOne({ email: token.email })
-      if (!doc) throw new pxl.ErrorHandler(500, 'Unregistered user.')
-      else if (doc.is_active)
-        throw new pxl.ErrorHandler(500, 'This user is already approved.')
+      let doc = await UserSchema.findOne({
+        token: req.params.token,
+        email: token.email
+      })
 
-      if (token.code === parseInt(req.body.code)) {
+      if (!doc) {
+        throw new pxl.ErrorHandler(
+          500,
+          'This token is invalid. Please check your token and try again.',
+          'InvalidToken'
+        )
+      } else if (token.code === parseInt(req.body.code)) {
         await UserSchema.updateOne(
           { email: doc.email },
           { is_active: true, token: null }
         )
 
-        res.json({
+        res.status(200).json({
           success: true,
+          statusCode: 200,
           message: 'Your membership has been approved.'
         })
       } else {
-        throw new pxl.ErrorHandler(500, 'Verification code is wrong.')
+        throw new pxl.ErrorHandler(
+          500,
+          'Verification code is not correct. Please check your verification code and try again.',
+          'VerificationCode'
+        )
       }
     } catch (error) {
       return next(error)

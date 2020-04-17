@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-  isItRestfulAPI: true,
+  mode: 'graphql',
 
   /*
    * Set the database informations

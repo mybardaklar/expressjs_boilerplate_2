@@ -7,13 +7,21 @@ class AuthValidator {
   // [POST] Sign up page
   signUp() {
     return [
-      body('fullname')
+      body('username')
         .exists()
         .withMessage('required')
         .notEmpty()
         .withMessage('empty')
         .isString()
         .withMessage('string')
+        .custom(async (username) => {
+          const user = await UserSchema.findOne({ username })
+          if (user)
+            throw new Error(
+              'This username already taken. Please try with different username.'
+            )
+          return true
+        })
         .trim()
         .escape(),
       body('email')
@@ -27,9 +35,12 @@ class AuthValidator {
         .withMessage('email')
         .isLength({ min: '6', max: '75' })
         .withMessage('length')
-        .custom(async (value) => {
-          const user = await UserSchema.findOne({ email: value })
-          if (user) throw new Error('E-mail already in use')
+        .custom(async (email) => {
+          const user = await UserSchema.findOne({ email })
+          if (user)
+            throw new Error(
+              'This email already taken. Please try with different email.'
+            )
         })
         .trim()
         .normalizeEmail(),
@@ -43,8 +54,7 @@ class AuthValidator {
         .isLength({ min: '6', max: '75' })
         .withMessage('length')
         .trim()
-        .escape(),
-      body('role')
+        .escape()
     ]
   }
 

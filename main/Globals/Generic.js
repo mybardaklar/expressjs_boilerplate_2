@@ -2,7 +2,7 @@
 
 class Generic {
   Model(model) {
-    return require(`@pxlayer/Models/${model}`)
+    return require(`@pxl/Models/${model}`)
   }
 
   convertSize(args) {
