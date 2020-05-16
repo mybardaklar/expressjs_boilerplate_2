@@ -2,15 +2,19 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@pxlayer/*": ["./*"],
-      "@pxlayer/Models/*": ["./app/Models/*"],
-      "@pxlayer/Validators/*": ["./app/Validators/*"],
-      "@pxlayer/Controllers/*": ["./app/Controllers/*"],
-      "@pxlayer/Routes/*": ["./app/Routes/*"],
-      "@pxlayer/Middleware/*": ["./app/Middleware/*"],
-      "@pxlayer/Cron/*": ["./app/Cron/*"],
-      "@pxlayer/Providers/*": ["./init/Providers/*"],
-      "@pxlayer/Helpers/*": ["./init/Helpers/*"]
+      "@pxl/*": ["./*"],
+      "@pxl/Models/*": ["./app/Models/*"],
+      "@pxl/Validators/*": ["./app/Validators/*"],
+      "@pxl/Controllers/*": ["./app/Controllers/*"],
+      "@pxl/Routes/*": ["./app/Routes/*"],
+      "@pxl/Middleware/*": ["./app/Middleware/*"],
+      "@pxl/Cron/*": ["./app/Cron/*"],
+      "@pxl/graphql/*": ["./graphql/*"],
+      "@pxl/graphql/resolvers/*": ["./graphql/Resolvers/*"],
+      "@pxl/graphql/types/*": ["./graphql/Types/*"],
+      "@pxl/main/Providers/*": ["./main/Providers/*"],
+      "@pxl/main/Middleware/*": ["./main/Middleware/*"],
+      "@pxl/main/Helpers/*": ["./main/Helpers/*"]
     }
   },
   "exclude": ["node_modules"]

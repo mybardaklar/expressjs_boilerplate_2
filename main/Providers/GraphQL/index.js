@@ -6,6 +6,9 @@ const _ = require('lodash')
 const { ApolloServer } = require('apollo-server-express')
 const { importSchema } = require('graphql-import')
 
+const ExportResolver = require('./GraphQL.resolver')
+const Authentication = require('./GraphQL.authentication')
+
 class GraphQLProvider {
   constructor() {
     this.resolvers = {
@@ -44,7 +47,14 @@ class GraphQLProvider {
 
     this.server = new ApolloServer({
       typeDefs: importSchema(schemaPath),
-      resolvers: this.resolvers
+      resolvers: this.resolvers,
+      context: async ({ req }) => {
+        await Authentication(req)
+
+        return {
+          req
+        }
+      }
     })
   }
 }

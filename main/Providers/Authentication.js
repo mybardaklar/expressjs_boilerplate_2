@@ -10,4 +10,4 @@ if (pxl.config.authentication) {
   }
 }
 
-module.exports = require('@pxl/Helpers/Authentication')
+module.exports = require('@pxl/main/Middleware/Authentication')

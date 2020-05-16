@@ -12,12 +12,21 @@ type User {
   snaps: [Snap!]!
 }
 
-type Mutation {
-  createUser(data: CreateUserInput!): User
+type Token {
+  token: String!
 }
 
-input CreateUserInput {
+type Mutation {
+  signUp(data: SignUpInput!): User
+  signIn(data: SignInInput!): Token
+}
+
+input SignUpInput {
   username: String!
   email: String!
+  password: String!
+}
+input SignInInput {
+  username: String!
   password: String!
 }

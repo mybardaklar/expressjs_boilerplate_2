@@ -12,7 +12,7 @@ const pxlConfig = require('@pxl/pxl.config')
 class Server {
   constructor() {
     this.app = express()
-    this.Providers = require('@pxl/Providers')
+    this.Providers = require('@pxl/main/Providers')
 
     this.host = process.env.HOST || 'localhost'
     this.port = process.env.PORT || 4747
@@ -27,10 +27,18 @@ class Server {
   // Listen the server
   listen() {
     this.app.listen(this.port, this.host)
-    consola.ready({
-      message: `Server listening on \`http://${this.host}:${this.port}\``,
-      badge: true
-    })
+
+    if (pxlConfig.mode === 'graphql') {
+      consola.ready({
+        message: `GraphQL server listening on \`http://${this.host}:${this.port}/graphql\``,
+        badge: true
+      })
+    } else {
+      consola.ready({
+        message: `Server listening on \`http://${this.host}:${this.port}\``,
+        badge: true
+      })
+    }
   }
 
   // Initialize middlewares
@@ -40,8 +48,7 @@ class Server {
     this.app.use(express.urlencoded({ extended: false }))
     this.app.use(cookieParser())
     this.app.use(cors())
-
-    if (pxlConfig.mode !== 'graphql') this.app.use(passport.initialize())
+    this.app.use(passport.initialize())
   }
 
   // Set the static paths

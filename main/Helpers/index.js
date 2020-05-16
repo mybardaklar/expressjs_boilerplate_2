@@ -7,9 +7,9 @@ const Helpers = require('./Helpers')
 
 global.pxl = {
   ...global.pxl,
-  ErrorHandler: ErrorHandler,
+  ErrorHandler,
   Model: Generic.Model,
-  Mail: Mail,
+  Mail,
   Helpers,
   functions: {
     convertSize: Generic.convertSize
